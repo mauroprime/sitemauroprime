@@ -19,7 +19,7 @@ export function FBPixel() {
     if (!(window as any).fbq) {
       /* eslint-disable */
       // @ts-ignore
-      !(function (f, b, e, v, n, t, s) {
+      !(function (f: any, b: any, e: any, v: any, n?: any, t?: any, s?: any) {
         if (f.fbq) return
         n = f.fbq = function () {
           n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
@@ -34,7 +34,7 @@ export function FBPixel() {
         t.src = v
         s = b.getElementsByTagName(e)[0]
         s.parentNode.insertBefore(t, s)
-      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+      })(window as any, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
       /* eslint-enable */
       
       // @ts-ignore
