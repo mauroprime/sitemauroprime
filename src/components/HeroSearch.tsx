@@ -12,9 +12,10 @@ interface HeroSearchProps {
   theme?: 'dark' | 'light'
   projectSlug?: string
   projectId?: string
+  projectName?: string
 }
 
-function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug, projectId }: HeroSearchProps) {
+function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
   const isVertical = variant === 'vertical'
   const isLight = theme === 'light'
   const searchParams = useSearchParams()
@@ -24,8 +25,12 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   const [intent, setIntent] = useState<'Construir' | 'Investir'>('Construir')
   const [location, setLocation] = useState('')
   const [locationError, setLocationError] = useState(false)
-  const [type, setType] = useState('')
+  const [type, setType] = useState(projectName || '')
   const [investment, setInvestment] = useState(500)
+
+  useEffect(() => {
+    if (projectName) setType(projectName)
+  }, [projectName])
   
   // Modal State
   const [isOpen, setIsOpen] = useState(false)
@@ -174,7 +179,11 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                   onChange={(e) => setType(e.target.value)}
                   className={`w-full ${isLight ? 'bg-white border-zinc-300 text-zinc-900 focus:border-brand-gold' : 'bg-white/5 border-white/10 text-zinc-300 focus:border-brand-gold'} border rounded-xl pl-10 pr-10 py-3.5 text-sm appearance-none focus:outline-none transition-all hover:bg-white/10 cursor-pointer`}
                 >
-                  <option value="" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Selecione o estilo</option>
+                  {projectName ? (
+                    <option value={projectName} className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>{projectName}</option>
+                  ) : (
+                    <option value="" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Selecione o estilo</option>
+                  )}
                   <option value="terrea" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Casa Térrea</option>
                   <option value="sobrado" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Sobrado Moderno</option>
                   <option value="geminada" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Invest./Geminadas</option>
@@ -338,10 +347,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   )
 }
 
-export function HeroSearch({ variant = 'horizontal', theme = 'dark', projectSlug, projectId }: HeroSearchProps) {
+export function HeroSearch({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
   return (
     <Suspense fallback={<div className="w-full h-32 bg-white/5 animate-pulse rounded-2xl"></div>}>
-      <HeroSearchContent variant={variant} theme={theme} projectSlug={projectSlug} projectId={projectId} />
+      <HeroSearchContent variant={variant} theme={theme} projectSlug={projectSlug} projectId={projectId} projectName={projectName} />
     </Suspense>
   )
 }
