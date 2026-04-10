@@ -118,8 +118,12 @@ export default async function Home() {
       </section>
 
       {/* SEÇÃO: DEPOIMENTOS - INFINITE SCROLL SLOW (5ª SESSÃO) */}
-      <section className="py-24 bg-[#080808] border-y border-white/5 overflow-hidden w-full">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-16 text-center">
+      <section className="relative py-24 bg-[#080808] border-y border-white/5 overflow-hidden w-full">
+        {/* Efeito de Fade Premium nas Laterais */}
+        <div className="absolute inset-y-0 left-0 w-20 md:w-64 bg-gradient-to-r from-[#080808] to-transparent z-20 pointer-events-none"></div>
+        <div className="absolute inset-y-0 right-0 w-20 md:w-64 bg-gradient-to-l from-[#080808] to-transparent z-20 pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-16 text-center relative z-10">
             <h2 className="text-[22px] md:text-[30px] font-serif text-white font-medium tracking-tight mb-4">Experiências que Inspiram Confiança</h2>
             <div className="w-24 h-1.5 bg-brand-gold rounded-full mx-auto"></div>
         </div>
