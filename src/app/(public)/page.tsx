@@ -6,6 +6,8 @@ import { HorizontalProjects } from "@/components/HorizontalProjects";
 import { ProjectMovingWall } from "@/components/ProjectMovingWall";
 import { HeroSearch } from "@/components/HeroSearch";
 import { FAQ } from "@/components/FAQ";
+import { TestimonialSlidingWall } from "@/components/TestimonialSlidingWall";
+
 
 const googleReviews = [
   { client_name: 'Janaine Sheron', link: 'https://share.google/Z8ZjZcjXKTdrqq2Dy', date: 'um mês atrás', content: 'Empresa séria e comprometida com o cliente. Sempre disponíveis para esclarecer dúvidas e muito organizados durante todo o processo. Fiquei muito satisfeita!', rating: 5 },
@@ -128,148 +130,16 @@ export default async function Home() {
             <div className="w-24 h-1.5 bg-brand-gold rounded-full mx-auto"></div>
         </div>
 
-        {/* Versão Desktop: Animação Infinita */}
-        <div className="hidden md:block space-y-6">
-          {/* Linha 1: Esquerda */}
-          <div className="relative w-full flex overflow-hidden group">
-              <div className="relative flex w-[200%] animate-infinite-scroll-slow hover:[animation-play-state:paused]">
-                  {[1, 2].map((set) => (
-                    <div key={set} className="flex flex-shrink-0 justify-start items-stretch px-4 gap-6">
-                      {googleReviews.slice(0, 5).map((test, index) => (
-                          <a 
-                            key={index} 
-                            href={test.link} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px] group/card"
-                          >
-                              <div>
-                                  <div className="flex text-brand-gold mb-6 gap-1">
-                                      {Array.from({ length: test.rating || 5 }).map((_, i) => (
-                                        <Star key={i} className="w-5 h-5 fill-current" />
-                                      ))}
-                                  </div>
-                                  <p className="text-base text-gray-300 font-light italic mb-8 leading-relaxed group-hover/card:text-white transition-colors">
-                                    "{test.content}"
-                                  </p>
-                              </div>
-                              <div className="flex items-center justify-between mt-auto">
-                                  <div className="flex items-center gap-4">
-                                      <div className="w-12 h-12 bg-brand-black flex items-center justify-center text-brand-gold text-lg font-serif rounded-full overflow-hidden border border-brand-gold/20 shrink-0">
-                                          {test.client_name.charAt(0)}
-                                      </div>
-                                      <div>
-                                          <h4 className="text-white font-medium text-[15px]">{test.client_name}</h4>
-                                          <span className="text-[13px] text-zinc-500 font-light">{test.date}</span>
-                                      </div>
-                                  </div>
-                                  <div className="w-8 h-8 rounded-full bg-white flex justify-center items-center shrink-0">
-                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                                          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                                          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                                      </svg>
-                                  </div>
-                              </div>
-                          </a>
-                        ))}
-                    </div>
-                  ))}
-              </div>
-          </div>
-
-          {/* Linha 2: Direita */}
-          <div className="relative w-full flex overflow-hidden group">
-              <div className="relative flex w-[200%] animate-infinite-scroll-slow [animation-direction:reverse] hover:[animation-play-state:paused]">
-                  {[1, 2].map((set) => (
-                    <div key={set} className="flex flex-shrink-0 justify-start items-stretch px-4 gap-6">
-                      {googleReviews.slice(5).map((test, index) => (
-                          <a 
-                            key={index} 
-                            href={test.link} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px] group/card"
-                          >
-                              <div>
-                                  <div className="flex text-brand-gold mb-6 gap-1">
-                                      {Array.from({ length: test.rating || 5 }).map((_, i) => (
-                                        <Star key={i} className="w-5 h-5 fill-current" />
-                                      ))}
-                                  </div>
-                                  <p className="text-base text-gray-300 font-light italic mb-8 leading-relaxed group-hover/card:text-white transition-colors">
-                                    "{test.content}"
-                                  </p>
-                              </div>
-                              <div className="flex items-center justify-between mt-auto">
-                                  <div className="flex items-center gap-4">
-                                      <div className="w-12 h-12 bg-brand-black flex items-center justify-center text-brand-gold text-lg font-serif rounded-full overflow-hidden border border-brand-gold/20 shrink-0">
-                                          {test.client_name.charAt(0)}
-                                      </div>
-                                      <div>
-                                          <h4 className="text-white font-medium text-[15px]">{test.client_name}</h4>
-                                          <span className="text-[13px] text-zinc-500 font-light">{test.date}</span>
-                                      </div>
-                                  </div>
-                                  <div className="w-8 h-8 rounded-full bg-white flex justify-center items-center shrink-0">
-                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                                          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                                          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                                      </svg>
-                                  </div>
-                              </div>
-                          </a>
-                        ))}
-                    </div>
-                  ))}
-              </div>
-          </div>
-        </div>
-
-        {/* Versão MOBILE: Arrastável (Swipe) */}
-        <div className="md:hidden flex overflow-x-auto gap-4 px-6 pb-4 snap-x snap-mandatory no-scrollbar">
-          {googleReviews.map((test, index) => (
-            <a 
-              key={index} 
-              href={test.link} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-brand-dark p-6 rounded-3xl border border-white/5 shrink-0 w-[85vw] snap-center flex flex-col justify-between min-h-[300px]"
-            >
-              <div>
-                  <div className="flex text-brand-gold mb-4 gap-1">
-                      {Array.from({ length: test.rating || 5 }).map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-current" />
-                      ))}
-                  </div>
-                  <p className="text-[15px] text-gray-300 font-light italic mb-6 leading-relaxed">
-                    "{test.content}"
-                  </p>
-              </div>
-              <div className="flex items-center justify-between mt-auto">
-                  <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-brand-black flex items-center justify-center text-brand-gold text-base font-serif rounded-full overflow-hidden border border-brand-gold/20 shrink-0">
-                          {test.client_name.charAt(0)}
-                      </div>
-                      <div>
-                          <h4 className="text-white font-medium text-[14px]">{test.client_name}</h4>
-                          <span className="text-[12px] text-zinc-500 font-light">{test.date}</span>
-                      </div>
-                  </div>
-                  <div className="w-7 h-7 rounded-full bg-white flex justify-center items-center shrink-0 scale-90">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14">
-                          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                      </svg>
-                  </div>
-              </div>
-            </a>
-          ))}
+        <div className="space-y-4 md:space-y-6">
+          <TestimonialSlidingWall 
+            reviews={googleReviews.slice(0, 5)} 
+            duration={60}
+          />
+          <TestimonialSlidingWall 
+            reviews={googleReviews.slice(5)} 
+            reverse={true}
+            duration={60}
+          />
         </div>
       </section>
 
