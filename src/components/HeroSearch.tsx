@@ -23,8 +23,6 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   // Search State
   const [intent, setIntent] = useState<'Construir' | 'Investir'>('Construir')
-  const [location, setLocation] = useState('')
-  const [locationError, setLocationError] = useState(false)
   const [type, setType] = useState(projectName || '')
   const [investment, setInvestment] = useState(500)
 
@@ -62,11 +60,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   }
 
   const handleAnalyse = () => {
-    if (!location.trim()) {
-      setLocationError(true)
-      return
-    }
-    setLocationError(false)
+    // Não temos mais localização obrigatória, mas podemos validar o tipo se quisermos
     setIsOpen(true)
     
     // Dispara evento de início de checkout quando abre o modal de lead
@@ -84,9 +78,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     const formData = new FormData()
     formData.append('name', name)
     formData.append('phone', whatsapp)
-    formData.append('has_land', hasLand ? 'true' : 'false')
     formData.append('intent', intent)
-    formData.append('location', location)
+    formData.append('has_land', hasLand ? 'true' : 'false')
     formData.append('project_type', type)
     formData.append('investment_range', `R$ ${investment}k`)
     formData.append('timeframe', timeframe)
@@ -146,32 +139,25 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           {!isVertical && <div className={`h-12 w-px ${isLight ? 'bg-zinc-300' : 'bg-white/10'} hidden xl:block shrink-0`}></div>}
 
           <div className={`flex-1 grid grid-cols-1 ${isVertical ? 'gap-6' : 'md:grid-cols-3 xl:grid-cols-10 gap-8'} w-full items-center`}>
-            {/* Location */}
+            {/* Possuí Terreno */}
             <div className={`relative group ${isVertical ? '' : 'md:col-span-1 xl:col-span-3'}`}>
-              <label className={`text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-500' : 'text-zinc-500'} block mb-2 ml-1`}>Localização Terreno</label>
-              <div className="relative">
-                <MapPin className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-transform group-hover:scale-110 ${locationError ? 'text-red-400' : 'text-brand-gold'}`} />
-                <input 
-                  type="text" 
-                  value={location}
-                  onChange={(e) => {
-                    setLocation(e.target.value)
-                    if (locationError) setLocationError(false)
-                  }}
-                  placeholder="Seu Terreno ou Cidade" 
-                  className={`w-full ${isLight ? 'bg-white border-zinc-300 text-zinc-900 focus:border-brand-gold placeholder-zinc-400' : 'bg-white/5 border-white/10 text-white focus:border-brand-gold placeholder-zinc-500'} border rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none transition-all hover:bg-white/10 ${locationError ? 'border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.2)] placeholder-red-400/50' : ''}`}
-                />
-              </div>
-              {locationError && (
-                <span className="absolute -bottom-5 left-2 text-[10px] text-red-400 font-medium whitespace-nowrap">
-                  Este campo precisa ser preenchido
+              <label className={`text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-500' : 'text-zinc-500'} block mb-2 ml-1`}>Possuí terreno?</label>
+              <div 
+                onClick={() => setHasLand(!hasLand)}
+                className={`relative flex items-center gap-3 w-full ${isLight ? 'bg-white border-zinc-300' : 'bg-white/5 border-white/10'} border rounded-xl px-4 py-[13.5px] cursor-pointer hover:bg-white/10 transition-all select-none`}
+              >
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${hasLand ? 'bg-brand-gold border-brand-gold text-black' : 'border-zinc-700'}`}>
+                  {hasLand && <CheckCircle2 size={14} strokeWidth={3} />}
+                </div>
+                <span className={`text-sm font-medium ${isLight ? 'text-zinc-900' : 'text-zinc-300'}`}>
+                  {hasLand ? 'Sim, eu possuo' : 'Não, ainda não'}
                 </span>
-              )}
+              </div>
             </div>
             
-            {/* Property Type */}
+            {/* Project Style */}
             <div className={`relative group ${isVertical ? '' : 'md:col-span-1 xl:col-span-3'}`}>
-              <label className={`text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-500' : 'text-zinc-500'} block mb-2 ml-1`}>Qual o projeto?</label>
+              <label className={`text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-500' : 'text-zinc-500'} block mb-2 ml-1`}>Estilo do projeto</label>
               <div className="relative">
                 <HomeIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gold w-4 h-4 transition-transform group-hover:scale-110" />
                 <select 
@@ -179,14 +165,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                   onChange={(e) => setType(e.target.value)}
                   className={`w-full ${isLight ? 'bg-white border-zinc-300 text-zinc-900 focus:border-brand-gold' : 'bg-white/5 border-white/10 text-zinc-300 focus:border-brand-gold'} border rounded-xl pl-10 pr-10 py-3.5 text-sm appearance-none focus:outline-none transition-all hover:bg-white/10 cursor-pointer`}
                 >
-                  {projectName ? (
-                    <option value={projectName} className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>{projectName}</option>
-                  ) : (
-                    <option value="" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Selecione o estilo</option>
-                  )}
-                  <option value="terrea" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Casa Térrea</option>
-                  <option value="sobrado" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Sobrado Moderno</option>
-                  <option value="geminada" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Invest./Geminadas</option>
+                  <option value="" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Selecione o padrão</option>
+                  <option value="Padrão" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Padrão</option>
+                  <option value="Médio Padrão" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Médio Padrão</option>
+                  <option value="Alto Padrão" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Alto Padrão</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4 pointer-events-none" />
               </div>
@@ -288,13 +270,6 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-gold transition-all"
                         disabled={isPending}
                       />
-                    </div>
-
-                    <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer hover:bg-white/10 transition-colors mb-4" onClick={() => setHasLand(!hasLand)}>
-                      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${hasLand ? 'bg-brand-gold border-brand-gold text-black' : 'border-zinc-700'}`}>
-                        {hasLand && <CheckCircle2 size={16} strokeWidth={3} />}
-                      </div>
-                      <span className="text-sm font-medium text-zinc-300">Já possuo terreno</span>
                     </div>
 
                     <div className="space-y-2">
