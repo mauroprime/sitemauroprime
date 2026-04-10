@@ -187,7 +187,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
               )}
 
               {/* Nova seção de Análise Consultiva com HeroSearch Vertical */}
-              <div className="pt-8 border-t border-zinc-100 flex flex-col items-center">
+              <div id="analise" className="pt-8 border-t border-zinc-100 flex flex-col items-center">
                 <div className="text-center mb-6">
                   <h4 className="font-serif text-xl text-zinc-900 mb-2">Análise Consultiva</h4>
                   <p className="text-xs text-zinc-500">Inicie sua orientação técnica personalizada para este projeto.</p>
@@ -246,9 +246,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
           </p>
         </div>
         <TrackEventButton 
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#analise"
           eventName="Contact"
           eventData={{
             content_name: project.title,
@@ -256,9 +254,9 @@ export default async function ProjectDetailsPage({ params }: Props) {
             value: Number(project.promotional_price || project.price),
             currency: 'BRL'
           }}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-green-700 transition-colors shadow-md whitespace-nowrap"
+          className="bg-brand-gold text-black px-8 py-4 rounded-xl font-black text-sm hover:bg-brand-goldlight transition-all shadow-[0_10px_20px_rgba(212,175,55,0.3)] whitespace-nowrap uppercase tracking-widest flex items-center justify-center gap-2"
         >
-          Falar Agora
+          Analisar Agora
         </TrackEventButton>
       </div>
 
