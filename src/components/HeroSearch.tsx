@@ -142,16 +142,23 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
             {/* Possuí Terreno */}
             <div className={`relative group ${isVertical ? '' : 'md:col-span-1 xl:col-span-3'}`}>
               <label className={`text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-500' : 'text-zinc-500'} block mb-2 ml-1`}>Possuí terreno?</label>
-              <div 
-                onClick={() => setHasLand(!hasLand)}
-                className={`relative flex items-center gap-3 w-full ${isLight ? 'bg-white border-zinc-300' : 'bg-white/5 border-white/10'} border rounded-xl px-4 py-[13.5px] cursor-pointer hover:bg-white/10 transition-all select-none`}
-              >
-                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${hasLand ? 'bg-brand-gold border-brand-gold text-black' : 'border-zinc-700'}`}>
-                  {hasLand && <CheckCircle2 size={14} strokeWidth={3} />}
-                </div>
-                <span className={`text-sm font-medium ${isLight ? 'text-zinc-900' : 'text-zinc-300'}`}>
-                  {hasLand ? 'Sim, eu possuo' : 'Não, ainda não'}
-                </span>
+              <div className="flex gap-2">
+                <button 
+                  type="button"
+                  onClick={() => setHasLand(true)}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-xs font-bold transition-all border ${hasLand ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
+                >
+                  <CheckCircle2 size={14} className={hasLand ? 'opacity-100' : 'opacity-0'} />
+                  SIM
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setHasLand(false)}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-xs font-bold transition-all border ${!hasLand ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
+                >
+                  {!hasLand && <CheckCircle2 size={14} />}
+                  NÃO
+                </button>
               </div>
             </div>
             
