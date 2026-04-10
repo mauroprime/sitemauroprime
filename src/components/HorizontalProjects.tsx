@@ -132,12 +132,6 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
             key={project.id}
             project={project}
             className="w-[300px] md:w-[450px] shrink-0"
-            customImage={
-              <ImageCarousel 
-                images={[project.cover_image_url, ...((project.gallery_images as any[]) || [])].filter(Boolean)} 
-                aspectRatio="aspect-[4/3]"
-              />
-            }
           />
         ))}
         

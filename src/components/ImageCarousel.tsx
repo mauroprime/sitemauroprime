@@ -99,14 +99,14 @@ export function ImageCarousel({
         <>
           <button
             onClick={prevStep}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white lg:opacity-0 lg:group-hover:opacity-100 transition-all hover:bg-black/60"
             aria-label="Anterior"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={nextStep}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white lg:opacity-0 lg:group-hover:opacity-100 transition-all hover:bg-black/60"
             aria-label="Próximo"
           >
             <ChevronRight size={20} />

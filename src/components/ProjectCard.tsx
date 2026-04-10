@@ -4,6 +4,8 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Bed, ShieldCheck, Crop, ChevronRight } from 'lucide-react'
+import { ImageCarousel } from './ImageCarousel'
+
 
 interface ProjectCardProps {
   project: {
@@ -46,6 +48,12 @@ export function ProjectCard({ project, customImage, className = '' }: ProjectCar
       <div className="relative aspect-[4/3] overflow-hidden">
         {customImage ? (
           customImage
+        ) : project.gallery_images && (project.gallery_images as any[]).length > 0 ? (
+          <ImageCarousel 
+            images={[project.cover_image_url, ...(project.gallery_images as string[])].filter((img): img is string => !!img)} 
+            aspectRatio="h-full w-full"
+            className="h-full w-full"
+          />
         ) : (
           <Image 
             src={project.cover_image_url || '/placeholder-project.jpg'}
@@ -54,6 +62,7 @@ export function ProjectCard({ project, customImage, className = '' }: ProjectCar
             className="object-cover transition-transform duration-1000 group-hover:scale-110"
           />
         )}
+
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80"></div>
         
         <div className="absolute top-6 left-6 z-10 flex flex-col gap-2">
