@@ -14,8 +14,6 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [isFullyVisible, setIsFullyVisible] = useState(false)
-  const touchStartY = useRef(0)
-
   useEffect(() => {
     const parent = sectionRef.current
     const el = scrollContainerRef.current
@@ -34,54 +32,32 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
     )
     observer.observe(parent)
 
-    const handleScrollLogic = (deltaY: number, e: Event) => {
+    const handleWheelLogic = (e: WheelEvent) => {
       // Se a seção não estiver visível o suficiente, ignoramos
       if (!isFullyVisible) return
+
+      // Ignora scroll horizontal nativo (Trackpads)
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
 
       const canScrollRight = el.scrollLeft < (el.scrollWidth - el.clientWidth - 15)
       const canScrollLeft = el.scrollLeft > 15
       
       // Lógica de Trava: 
       // Se rolar para baixo e puder ir para a direita, OU rolar para cima e puder ir para a esquerda
-      if ((deltaY > 0 && canScrollRight) || (deltaY < 0 && canScrollLeft)) {
+      if ((e.deltaY > 0 && canScrollRight) || (e.deltaY < 0 && canScrollLeft)) {
         if (e.cancelable) e.preventDefault()
         
         // Aplica o movimento horizontal
-        el.scrollLeft += deltaY * 1.5
+        el.scrollLeft += e.deltaY * 1.5
       }
     }
 
-    const onWheel = (e: WheelEvent) => {
-      // Ignora scroll horizontal nativo (Trackpads)
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
-      handleScrollLogic(e.deltaY, e)
-    }
-
-    const onTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY
-    }
-
-    const onTouchMove = (e: TouchEvent) => {
-      const touchY = e.touches[0].clientY
-      const deltaY = touchStartY.current - touchY
-      
-      // Só interceptamos se o movimento vertical for predominante
-      handleScrollLogic(deltaY, e)
-      
-      // Atualizamos a base do toque apenas se não houver preventDefault (para permitir scroll fluido fora da trava)
-      // Mas na verdade, para a trava ser contínua, atualizamos sempre se estivermos travados
-      touchStartY.current = touchY
-    }
-
     // passive: false é CRÍTICO para o preventDefault funcionar
-    parent.addEventListener('wheel', onWheel, { passive: false })
-    parent.addEventListener('touchstart', onTouchStart, { passive: true })
-    parent.addEventListener('touchmove', onTouchMove, { passive: false })
+    // Aplicamos apenas o wheel (desktop)
+    parent.addEventListener('wheel', handleWheelLogic, { passive: false })
     
     return () => {
-      parent.removeEventListener('wheel', onWheel)
-      parent.removeEventListener('touchstart', onTouchStart)
-      parent.removeEventListener('touchmove', onTouchMove)
+      parent.removeEventListener('wheel', handleWheelLogic)
       observer.disconnect()
     }
   }, [isFullyVisible])
