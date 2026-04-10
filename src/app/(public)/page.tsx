@@ -135,7 +135,7 @@ export default async function Home() {
                 {[1, 2].map((set) => (
                   <div key={set} className="flex flex-shrink-0 justify-start items-stretch px-4 gap-6">
                     {googleReviews.slice(0, 5).map((test, index) => (
-                        <div key={index} className="bg-brand-dark p-8 rounded-3xl border border-white/5 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px]">
+                        <div key={index} className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px]">
                             <div>
                                 <div className="flex text-brand-gold mb-6 gap-1">
                                     {Array.from({ length: test.rating || 5 }).map((_, i) => (
@@ -178,7 +178,7 @@ export default async function Home() {
                 {[1, 2].map((set) => (
                   <div key={set} className="flex flex-shrink-0 justify-start items-stretch px-4 gap-6">
                     {googleReviews.slice(5).map((test, index) => (
-                        <div key={index} className="bg-brand-dark p-8 rounded-3xl border border-white/5 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px]">
+                        <div key={index} className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px]">
                             <div>
                                 <div className="flex text-brand-gold mb-6 gap-1">
                                     {Array.from({ length: test.rating || 5 }).map((_, i) => (
