@@ -127,7 +127,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
                        <div className="space-y-1">
                          <div className="flex items-center gap-3">
                            <span className="text-zinc-500 line-through text-lg font-light">R$ {Number(project.price).toLocaleString('pt-BR')}</span>
-                           <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
+                           <span className="bg-brand-gold text-black text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
                              {Math.round((1 - Number(project.promotional_price) / Number(project.price)) * 100)}% OFF
                            </span>
                          </div>
