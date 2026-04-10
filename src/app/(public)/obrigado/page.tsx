@@ -6,7 +6,7 @@ import { TrackLeadEffect } from '@/components/TrackLeadEffect'
 import { TrackEventButton } from '@/components/TrackEventButton'
 
 export const metadata = {
-  title: 'Obrigado! | Construtora Prime',
+  title: 'Obrigado! | MF Projetos & Obras',
   description: 'Recebemos seus dados. O Mauro Consultor entrará em contato em breve.',
 }
 

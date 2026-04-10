@@ -3,7 +3,7 @@ import { getSiteSettings } from '@/services/public'
 import { HeaderNav } from '@/components/HeaderNav'
 
 export const metadata: Metadata = {
-  title: 'Site Mauro - Construtora Prime',
+  title: 'MF Projetos & Obras',
   description: 'Projetos e oportunidades exclusivas',
 }
 

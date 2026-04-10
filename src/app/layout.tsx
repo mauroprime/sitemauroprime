@@ -11,7 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sitemauro.vercel.app'),
-  title: "Mauro Consultor | Projetos e Orientação para Construir",
+  title: "MF Projetos & Obras | Projetos e Orientação para Construir",
   description: "Encontre o projeto certo para o seu momento com a  orientação de quem entende de financiamento, terreno e obra.",
   verification: {
     other: {

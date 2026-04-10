@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${project.title} | Construtora Prime`,
+    title: `${project.title} | MF Projetos & Obras`,
     description: project.short_description || `Conheça o ${project.title}, um incrível empreendimento da Construtora Prime.`,
     openGraph: {
       images: project.cover_image_url ? [project.cover_image_url] : [],

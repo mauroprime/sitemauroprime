@@ -3,7 +3,7 @@ import { ProjectFilters } from "@/components/ProjectFilters"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Projetos | Construtora Prime",
+  title: "Projetos | MF Projetos & Obras",
   description: "Explore nosso portfólio de projetos residenciais de alto padrão. Encontre a casa dos seus sonhos com filtragem avançada por preço, cômodos e estilo.",
 }
 
