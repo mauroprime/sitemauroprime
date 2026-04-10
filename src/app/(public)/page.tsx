@@ -8,15 +8,15 @@ import { HeroSearch } from "@/components/HeroSearch";
 import { FAQ } from "@/components/FAQ";
 
 const googleReviews = [
-  { client_name: 'Janaine Sheron', date: 'um mês atrás', content: 'Empresa séria e comprometida com o cliente. Sempre disponíveis para esclarecer dúvidas e muito organizados durante todo o processo. Fiquei muito satisfeita!', rating: 5 },
-  { client_name: 'Samara Andressa', date: 'um mês atrás', content: 'Excelente experiência! Desde o primeiro contato fui muito bem atendida, sempre prestativos e transparentes. O serviço foi entregue dentro do prazo e com uma qualidade impecável. É uma empresa que realmente se preocupa com o cliente e faz tudo com muito profissionalismo. Super indico!', rating: 5 },
-  { client_name: 'Adriano De Oliveira Pinto', date: 'um mês atrás', content: 'A prime me surpreendeu , Empresa correta em meio a tantas empresas que nos decepcionam, Construí minha casa e é só alegria 😀😀', rating: 5 },
-  { client_name: 'Tiago Henrique', date: 'um mês atrás', content: 'Excelente suporte e agilidade nas entregas de cada prazo da obra. O proprietário possui uma equipe, mas sempre se coloca à disposição para dúvidas. Até o momento, estou super satisfeito e indico a construtora!!!', rating: 5 },
-  { client_name: 'Gilmar Kahell', date: 'um mês atrás', content: 'Fizeram um serviço de primeira, com especialista na área! Parabéns ao Diego e equipe!', rating: 5 },
-  { client_name: 'Maiko Charles Rodrigues', date: 'um mês atrás', content: 'Empresa séria e comprometida com o cliente. Top.', rating: 5 },
-  { client_name: 'marcos Silva', date: 'um mês atrás', content: 'Minha obra foi realizada no cronograma em dia, empresa organizada e equipe de profissionais atenciosos', rating: 5 },
-  { client_name: 'Cristian George', date: 'um mês atrás', content: 'Excelentes profissionais! Recomendo', rating: 5 },
-  { client_name: 'Marcia Regina', date: 'um mês atrás', content: 'Trabalho de alta qualidade, com profissionalismo e transparência do início ao fim!!', rating: 5 }
+  { client_name: 'Janaine Sheron', link: 'https://share.google/Z8ZjZcjXKTdrqq2Dy', date: 'um mês atrás', content: 'Empresa séria e comprometida com o cliente. Sempre disponíveis para esclarecer dúvidas e muito organizados durante todo o processo. Fiquei muito satisfeita!', rating: 5 },
+  { client_name: 'Samara Andressa', link: 'https://share.google/67WWCFfzXEg5uapGZ', date: 'um mês atrás', content: 'Excelente experiência! Desde o primeiro contato fui muito bem atendida, sempre prestativos e transparentes. O serviço foi entregue dentro do prazo e com uma qualidade impecável. É uma empresa que realmente se preocupa com o cliente e faz tudo com muito profissionalismo. Super indico!', rating: 5 },
+  { client_name: 'Adriano De Oliveira Pinto', link: 'https://share.google/eILKPsFgLK4kx3pFP', date: 'um mês atrás', content: 'A prime me surpreendeu , Empresa correta em meio a tantas empresas que nos decepcionam, Construí minha casa e é só alegria 😀😀', rating: 5 },
+  { client_name: 'Tiago Henrique', link: 'https://share.google/zv3BwyF6zfNTDUBaw', date: 'um mês atrás', content: 'Excelente suporte e agilidade nas entregas de cada prazo da obra. O proprietário possui uma equipe, mas sempre se coloca à disposição para dúvidas. Até o momento, estou super satisfeito e indico a construtora!!!', rating: 5 },
+  { client_name: 'Gilmar Kahell', link: 'https://share.google/G3W0QF2JUEXyTPMEa', date: 'um mês atrás', content: 'Fizeram um serviço de primeira, com especialista na área! Parabéns ao Diego e equipe!', rating: 5 },
+  { client_name: 'Maiko Charles Rodrigues', link: 'https://share.google/dTcwZ33rRa0OIAnxY', date: 'um mês atrás', content: 'Empresa séria e comprometida com o cliente. Top.', rating: 5 },
+  { client_name: 'marcos Silva', link: 'https://share.google/ABJMMij9XujjeI0EO', date: 'um mês atrás', content: 'Minha obra foi realizada no cronograma em dia, empresa organizada e equipe de profissionais atenciosos', rating: 5 },
+  { client_name: 'Cristian George', link: 'https://share.google/E6Stjyf4RtkbOXfFl', date: 'um mês atrás', content: 'Excelentes profissionais! Recomendo', rating: 5 },
+  { client_name: 'Marcia Regina', link: 'https://share.google/CA2xyfBxZRfYLOngu', date: 'um mês atrás', content: 'Trabalho de alta qualidade, com profissionalismo e transparência do início ao fim!!', rating: 5 }
 ];
 
 export default async function Home() {
@@ -135,14 +135,20 @@ export default async function Home() {
                 {[1, 2].map((set) => (
                   <div key={set} className="flex flex-shrink-0 justify-start items-stretch px-4 gap-6">
                     {googleReviews.slice(0, 5).map((test, index) => (
-                        <div key={index} className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px]">
+                        <a 
+                          key={index} 
+                          href={test.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px] group/card"
+                        >
                             <div>
                                 <div className="flex text-brand-gold mb-6 gap-1">
                                     {Array.from({ length: test.rating || 5 }).map((_, i) => (
                                       <Star key={i} className="w-5 h-5 fill-current" />
                                     ))}
                                 </div>
-                                <p className="text-base text-gray-300 font-light italic mb-8 leading-relaxed">
+                                <p className="text-base text-gray-300 font-light italic mb-8 leading-relaxed group-hover/card:text-white transition-colors">
                                   "{test.content}"
                                 </p>
                             </div>
@@ -165,7 +171,7 @@ export default async function Home() {
                                     </svg>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                       ))}
                   </div>
                 ))}
@@ -178,14 +184,20 @@ export default async function Home() {
                 {[1, 2].map((set) => (
                   <div key={set} className="flex flex-shrink-0 justify-start items-stretch px-4 gap-6">
                     {googleReviews.slice(5).map((test, index) => (
-                        <div key={index} className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px]">
+                        <a 
+                          key={index} 
+                          href={test.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="bg-brand-dark p-8 rounded-3xl border border-white/5 hover:border-brand-gold/50 transition-all duration-300 w-[300px] md:w-[450px] flex-shrink-0 shadow-2xl relative flex flex-col justify-between min-h-[250px] group/card"
+                        >
                             <div>
                                 <div className="flex text-brand-gold mb-6 gap-1">
                                     {Array.from({ length: test.rating || 5 }).map((_, i) => (
                                       <Star key={i} className="w-5 h-5 fill-current" />
                                     ))}
                                 </div>
-                                <p className="text-base text-gray-300 font-light italic mb-8 leading-relaxed">
+                                <p className="text-base text-gray-300 font-light italic mb-8 leading-relaxed group-hover/card:text-white transition-colors">
                                   "{test.content}"
                                 </p>
                             </div>
@@ -208,7 +220,7 @@ export default async function Home() {
                                     </svg>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                       ))}
                   </div>
                 ))}
