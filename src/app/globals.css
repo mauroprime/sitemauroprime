@@ -136,3 +136,54 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Estilos para o Range Slider (Mobile First) */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+  }
+
+  /* Webkit (Safari, Chrome, iOS) */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #C5A059;
+    cursor: pointer;
+    border: 3px solid #050505;
+    box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
+    margin-top: -9px; /* Ajuste para centralizar o polegar no trilho */
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  /* Firefox */
+  input[type="range"]::-moz-range-thumb {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #C5A059;
+    cursor: pointer;
+    border: 3px solid #050505;
+    box-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
+  }
+
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+}

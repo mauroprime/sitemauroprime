@@ -183,7 +183,7 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
           step="50"
           value={investment}
           onChange={(e) => setInvestment(parseInt(e.target.value))}
-          className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-brand-gold hover:bg-white/20 transition-all"
+          className="w-full cursor-pointer transition-all text-white/10"
         />
       </div>
 

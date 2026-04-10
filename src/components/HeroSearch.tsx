@@ -194,7 +194,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 step="50"
                 value={investment}
                 onChange={(e) => setInvestment(parseInt(e.target.value))}
-                className={`w-full h-1.5 ${isLight ? 'bg-zinc-300' : 'bg-white/10'} rounded-lg appearance-none cursor-pointer accent-brand-gold hover:bg-white/20 transition-all`}
+                className={`w-full cursor-pointer transition-all ${isLight ? 'text-zinc-300' : 'text-white/10'}`}
               />
             </div>
           </div>
