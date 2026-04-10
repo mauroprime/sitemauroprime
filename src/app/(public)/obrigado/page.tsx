@@ -22,10 +22,12 @@ async function ObrigadoData({ projetoSlug }: { projetoSlug?: string }) {
   const project = projetoSlug ? await getProjectBySlug(projetoSlug) : null
   const settings = await getSiteSettings()
 
-  const whatsappNumber = settings?.whatsapp_number?.replace(/\D/g, '') || '5541999999999'
+  const whatsappNumber = '554195907430' // Número solicitado: +55 41 9590-7430
+  
+  // Mensagem dinâmica baseada no projeto
   const message = project 
-    ? `Olá Mauro! Acabei de preencher meus dados no site para o projeto *${project.title}* e gostaria de agilizar meu atendimento.`
-    : 'Olá Mauro! Acabei de preencher meus dados no site e gostaria de saber mais sobre os projetos.'
+    ? `Olá Mauro! Acabei de ver o projeto *${project.title}* no seu site e preenchi meus dados. Gostaria de agilizar minha análise e entender os próximos passos para este projeto especificamente.`
+    : 'Olá Mauro! Acabei de preencher meus dados no site da Construtora Prime. Gostaria de uma consultoria inicial sobre os projetos e como posso iniciar meu planejamento com você.'
   
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
 
