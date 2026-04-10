@@ -2,6 +2,8 @@ import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { CheckCircle2, MessageCircle, ArrowLeft, Home, Building2, UserCheck } from 'lucide-react'
 import { getProjectBySlug, getSiteSettings } from '@/services/public'
+import { TrackLeadEffect } from '@/components/TrackLeadEffect'
+import { TrackEventButton } from '@/components/TrackEventButton'
 
 export const metadata = {
   title: 'Obrigado! | Construtora Prime',
@@ -29,6 +31,14 @@ async function ObrigadoData({ projetoSlug }: { projetoSlug?: string }) {
 
   return (
     <div className="min-h-screen bg-brand-dark relative overflow-hidden flex flex-col items-center justify-center p-6">
+      {/* Rastreamento de Lead no Cliente */}
+      <TrackLeadEffect project={project ? {
+        id: project.id,
+        title: project.title,
+        category: project.category,
+        price: Number(project.promotional_price || project.price)
+      } : null} />
+
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-gold/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
@@ -67,15 +77,20 @@ async function ObrigadoData({ projetoSlug }: { projetoSlug?: string }) {
         )}
 
         <div className="flex flex-col gap-4 max-w-md mx-auto pt-8">
-          <a 
+          <TrackEventButton 
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            eventName="Contact"
+            eventData={{
+              content_name: project ? project.title : 'Sucesso Geral',
+              method: 'WhatsApp'
+            }}
             className="group flex items-center justify-center gap-3 bg-brand-gold hover:bg-brand-goldlight text-black py-5 rounded-xl font-black uppercase tracking-widest transition-all shadow-[0_15px_30px_rgba(212,175,55,0.2)] hover:-translate-y-1"
           >
             <MessageCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
             Acelerar via WhatsApp
-          </a>
+          </TrackEventButton>
 
           <Link 
             href="/"

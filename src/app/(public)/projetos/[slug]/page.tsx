@@ -7,6 +7,7 @@ import { Bed, Bath, Sofa, Utensils, Waves, Car, ShieldCheck } from 'lucide-react
 import { ImageCarousel } from '@/components/ImageCarousel'
 import { HeroSearch } from '@/components/HeroSearch'
 import { TrackProjectView } from '@/components/TrackProjectView'
+import { TrackEventButton } from '@/components/TrackEventButton'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -192,7 +193,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
                   <p className="text-xs text-zinc-500">Inicie sua orientação técnica personalizada para este projeto.</p>
                 </div>
                 
-                <HeroSearch variant="vertical" theme="light" />
+                <HeroSearch variant="vertical" theme="light" projectSlug={project.slug} projectId={project.id} />
                 
                 <p className="text-[10px] text-center text-zinc-400 mt-6 uppercase tracking-widest leading-relaxed">
                   Atendimento focado em clareza técnica e segurança financeira.
@@ -244,14 +245,21 @@ export default async function ProjectDetailsPage({ params }: Props) {
             {project.price ? `R$ ${Number(project.promotional_price || project.price).toLocaleString('pt-BR')}` : 'Sob Consulta'}
           </p>
         </div>
-        <a 
+        <TrackEventButton 
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          eventName="Contact"
+          eventData={{
+            content_name: project.title,
+            content_category: project.category || 'Geral',
+            value: Number(project.promotional_price || project.price),
+            currency: 'BRL'
+          }}
           className="bg-green-600 text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-green-700 transition-colors shadow-md whitespace-nowrap"
         >
           Falar Agora
-        </a>
+        </TrackEventButton>
       </div>
 
       <TrackProjectView project={project} />

@@ -6,13 +6,30 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { firePixelEvent } from './FBPixel'
 
-function ContactFormContent() {
+interface ContactFormProps {
+  projectSlug?: string
+  projectId?: string
+}
+
+function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [hasStartedFilling, setHasStartedFilling] = useState(false)
+
+  const handleFocus = () => {
+    if (!hasStartedFilling) {
+      setHasStartedFilling(true)
+      firePixelEvent('InitiateCheckout', {
+        content_name: projectSlug ? `Form: ${projectSlug}` : 'Contato Geral',
+        content_category: 'Lead'
+      })
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -20,6 +37,10 @@ function ContactFormContent() {
     setError(null)
 
     const formData = new FormData(e.currentTarget)
+    
+    if (projectId) {
+      formData.append('related_project_id', projectId)
+    }
     
     // Captura UTMs da URL
     formData.append('utm_source', searchParams.get('utm_source') || '')
@@ -32,7 +53,8 @@ function ContactFormContent() {
       const result = await submitLead(formData)
       if (result.success) {
         // Redireciona para página de obrigado
-        router.push('/obrigado')
+        const redirectUrl = projectSlug ? `/obrigado?projeto=${projectSlug}` : '/obrigado'
+        router.push(redirectUrl)
       } else {
         setError(result.error || 'Erro inesperado')
       }
@@ -44,7 +66,7 @@ function ContactFormContent() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} onFocus={handleFocus} className="space-y-6">
       {error && (
         <div className="bg-red-500/10 text-red-400 p-4 rounded-xl border border-red-500/20 text-sm">
           {error}
@@ -89,10 +111,10 @@ function ContactFormContent() {
   )
 }
 
-export function ContactForm() {
+export function ContactForm({ projectSlug, projectId }: ContactFormProps) {
   return (
     <Suspense fallback={<div className="h-64 bg-white/5 animate-pulse rounded-2xl"></div>}>
-      <ContactFormContent />
+      <ContactFormContent projectSlug={projectSlug} projectId={projectId} />
     </Suspense>
   )
 }

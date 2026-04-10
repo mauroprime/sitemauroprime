@@ -25,88 +25,102 @@ async function getAdminClient() {
 }
 
 export async function submitLead(formData: FormData) {
-  const name = formData.get('name')?.toString()
-  const email = formData.get('email')?.toString() || 'não-informado@mauro.com'
-  const phone = formData.get('phone')?.toString() || null
-  const message = formData.get('message')?.toString() || null
-  const related_project_id = formData.get('related_project_id')?.toString() || null
-
-  // Novos campos da busca do Hero
-  const intent = formData.get('intent')?.toString() || null
-  const location = formData.get('location')?.toString() || null
-  const project_type = formData.get('project_type')?.toString() || null
-  const investment_range = formData.get('investment_range')?.toString() || null
-  const timeframe = formData.get('timeframe')?.toString() || null
-  const has_land = formData.get('has_land') === 'on' || formData.get('has_land') === 'true' || formData.get('has_land') === '1'
-
-  // Parâmetros UTM para rastreamento de marketing
-  const utm_source = formData.get('utm_source')?.toString() || null
-  const utm_medium = formData.get('utm_medium')?.toString() || null
-  const utm_campaign = formData.get('utm_campaign')?.toString() || null
-  const utm_content = formData.get('utm_content')?.toString() || null
-  const utm_term = formData.get('utm_term')?.toString() || null
-
-  if (!name) {
-    return { success: false, error: 'O nome é obrigatório.' }
-  }
-
-  const supabase = await getAdminClient()
-
-  const payload: Database['public']['Tables']['leads']['Insert'] = {
-    name,
-    email,
-    phone,
-    message,
-    related_project_id,
-    intent,
-    location,
-    project_type,
-    investment_range,
-    timeframe,
-    has_land,
-    utm_source,
-    utm_medium,
-    utm_campaign,
-    utm_content,
-    utm_term,
-    source: intent ? `Busca Hero (${intent})` : 'Formulário do Site',
-    status: 'new'
-  }
-
-  const { data, error } = await (supabase.from('leads') as any).insert(payload).select().single()
-
-  if (error) {
-    console.error('Lead submit error:', error)
-    return { success: false, error: 'Erro ao enviar contato. Tente novamente.' }
-  }
-
-  // DISPARO DA API DE CONVERSÕES (CAPI)
   try {
-    const head = await headers()
-    const userAgent = head.get('user-agent') || ''
-    const clientIp = head.get('x-forwarded-for')?.split(',')[0] || ''
-    const userData = await prepareUserData(email, phone || '')
+    const name = formData.get('name')?.toString()
+    const email = formData.get('email')?.toString() || 'não-informado@mauro.com'
+    const phone = formData.get('phone')?.toString() || null
+    const message = formData.get('message')?.toString() || null
+    const related_project_id = formData.get('related_project_id')?.toString() || null
 
-    await sendFBCapiEvent({
-      event_name: 'Lead',
-      event_source_url: head.get('referer') || '',
-      user_data: {
-        ...userData,
-        client_ip_address: clientIp,
-        client_user_agent: userAgent,
-      },
-      custom_data: {
-        content_name: intent ? `Busca: ${intent}` : 'Lead de Contato',
-        content_category: project_type || 'Imóveis',
-        timeframe: timeframe || 'não informado'
-      }
-    })
-  } catch (capiError) {
-    console.error('Falha ao disparar CAPI no servidor:', capiError)
-    // Não paramos o fluxo caso o rastreio falhe, pois o lead já foi salvo.
+    // Novos campos da busca do Hero
+    const intent = formData.get('intent')?.toString() || null
+    const location = formData.get('location')?.toString() || null
+    const project_type = formData.get('project_type')?.toString() || null
+    const investment_range = formData.get('investment_range')?.toString() || null
+    const timeframe = formData.get('timeframe')?.toString() || null
+    const has_land = formData.get('has_land') === 'on' || formData.get('has_land') === 'true' || formData.get('has_land') === '1'
+
+    // Parâmetros UTM para rastreamento de marketing
+    const utm_source = formData.get('utm_source')?.toString() || null
+    const utm_medium = formData.get('utm_medium')?.toString() || null
+    const utm_campaign = formData.get('utm_campaign')?.toString() || null
+    const utm_content = formData.get('utm_content')?.toString() || null
+    const utm_term = formData.get('utm_term')?.toString() || null
+
+    if (!name) {
+      return { success: false, error: 'O nome é obrigatório.' }
+    }
+
+    const supabase = await getAdminClient()
+
+    const payload: Database['public']['Tables']['leads']['Insert'] = {
+      name,
+      email,
+      phone,
+      message,
+      related_project_id,
+      intent,
+      location,
+      project_type,
+      investment_range,
+      timeframe,
+      has_land,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+      source: intent ? `Busca Hero (${intent})` : 'Formulário do Site',
+      status: 'new'
+    }
+
+    const { data, error } = await (supabase.from('leads') as any).insert(payload).select().single()
+
+    if (error) {
+      console.error('Lead submit error:', error)
+      return { success: false, error: 'Erro ao enviar contato. Tente novamente.' }
+    }
+
+    // Busca detalhes do projeto para o evento CAPI se houver related_project_id
+    let projectDetails: any = null
+    if (related_project_id) {
+      const { data: proj } = await supabase.from('projects').select('title, category, price, promotional_price').eq('id', related_project_id).single()
+      if (proj) projectDetails = proj
+    }
+
+    // DISPARO DA API DE CONVERSÕES (CAPI)
+    try {
+      const head = await headers()
+      const userAgent = head.get('user-agent') || ''
+      const clientIp = head.get('x-forwarded-for')?.split(',')[0] || ''
+      const userData = await prepareUserData(email, phone || '')
+
+      await sendFBCapiEvent({
+        event_name: 'Lead',
+        event_source_url: head.get('referer') || '',
+        user_data: {
+          ...userData,
+          client_ip_address: clientIp,
+          client_user_agent: userAgent,
+        },
+        custom_data: {
+          content_name: projectDetails?.title || (intent ? `Busca: ${intent}` : 'Lead de Contato'),
+          content_category: projectDetails?.category || project_type || 'Imóveis',
+          timeframe: timeframe || 'não informado',
+          value: Number(projectDetails?.promotional_price || projectDetails?.price || 0),
+          currency: 'BRL'
+        }
+      })
+    } catch (capiError) {
+      console.error('Falha ao disparar CAPI no servidor:', capiError)
+      // Não paramos o fluxo caso o rastreio falhe, pois o lead já foi salvo.
+    }
+
+    return { success: true, leadId: data?.id }
+  } catch (err: any) {
+    console.error('Unhandled exception in submitLead:', err)
+    return { success: false, error: `Erro Interno do Servidor: ${err.message}` }
   }
-
-  return { success: true, leadId: data?.id }
 }
 
 export async function deleteLead(id: string) {

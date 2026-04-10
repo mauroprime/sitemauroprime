@@ -5,13 +5,16 @@ import { MapPin, Home as HomeIcon, ChevronDown, Search, X, CheckCircle2 } from "
 import { motion, AnimatePresence } from 'framer-motion'
 import { submitLead } from '@/actions/leads'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { firePixelEvent } from './FBPixel'
 
 interface HeroSearchProps {
   variant?: 'horizontal' | 'vertical'
   theme?: 'dark' | 'light'
+  projectSlug?: string
+  projectId?: string
 }
 
-function HeroSearchContent({ variant = 'horizontal', theme = 'dark' }: HeroSearchProps) {
+function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug, projectId }: HeroSearchProps) {
   const isVertical = variant === 'vertical'
   const isLight = theme === 'light'
   const searchParams = useSearchParams()
@@ -60,6 +63,12 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark' }: HeroSearc
     }
     setLocationError(false)
     setIsOpen(true)
+    
+    // Dispara evento de início de checkout quando abre o modal de lead
+    firePixelEvent('InitiateCheckout', {
+      content_name: projectSlug ? `Análise: ${projectSlug}` : 'Procura Geral',
+      content_category: type || 'Geral'
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,6 +85,9 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark' }: HeroSearc
     formData.append('project_type', type)
     formData.append('investment_range', `R$ ${investment}k`)
     formData.append('timeframe', timeframe)
+    if (projectId) {
+      formData.append('related_project_id', projectId)
+    }
 
     // Captura UTMs da URL
     formData.append('utm_source', searchParams.get('utm_source') || '')
@@ -92,7 +104,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark' }: HeroSearc
         setTimeout(() => {
           setIsOpen(false)
           setIsSuccess(false)
-          router.push('/obrigado')
+          const redirectUrl = projectSlug ? `/obrigado?projeto=${projectSlug}` : '/obrigado'
+          router.push(redirectUrl)
         }, 1500)
       } else {
         setError(result.error || 'Erro inesperado')
@@ -325,10 +338,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark' }: HeroSearc
   )
 }
 
-export function HeroSearch({ variant = 'horizontal', theme = 'dark' }: HeroSearchProps) {
+export function HeroSearch({ variant = 'horizontal', theme = 'dark', projectSlug, projectId }: HeroSearchProps) {
   return (
     <Suspense fallback={<div className="w-full h-32 bg-white/5 animate-pulse rounded-2xl"></div>}>
-      <HeroSearchContent variant={variant} theme={theme} />
+      <HeroSearchContent variant={variant} theme={theme} projectSlug={projectSlug} projectId={projectId} />
     </Suspense>
   )
 }
