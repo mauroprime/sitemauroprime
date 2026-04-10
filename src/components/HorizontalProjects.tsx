@@ -89,15 +89,15 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-12 w-full">
           {/* Header com Navegação */}
-          <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-              <div>
+          <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6">
+              <div className="text-center md:text-left w-full md:w-auto">
                   <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-[13px] mb-4 block">Portfólio de Consultoria</span>
                   <h2 className="text-[22px] md:text-[30px] font-serif text-white font-medium tracking-tight mb-4">Projetos em Destaque</h2>
-                  <div className="w-24 h-1.5 bg-brand-gold rounded-full"></div>
+                  <div className="w-24 h-1.5 bg-brand-gold rounded-full mx-auto md:mx-0"></div>
               </div>
               
               {/* Botões de Navegação */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 self-end md:self-auto">
                   <button 
                     type="button"
                     onClick={() => scroll('left')}
