@@ -61,7 +61,7 @@ export function ProjectCard({ project, customImage, className = '' }: ProjectCar
             {project.type || project.category || 'Residencial'}
           </span>
           {project.promotional_price && Number(project.promotional_price) < Number(project.price) && (
-            <span className="px-4 py-1.5 bg-red-600/90 backdrop-blur-xl text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full w-fit shadow-lg shadow-red-900/20">
+            <span className="px-4 py-1.5 bg-emerald-600/90 backdrop-blur-xl text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full w-fit shadow-lg shadow-emerald-900/20">
               {Math.round((1 - Number(project.promotional_price) / Number(project.price)) * 100)}% OFF
             </span>
           )}
