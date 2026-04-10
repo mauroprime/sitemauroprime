@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getSiteSettings } from '@/services/public'
+import { HeaderNav } from '@/components/HeaderNav'
 
 export const metadata: Metadata = {
   title: 'Site Mauro - Construtora Prime',
@@ -35,13 +36,7 @@ export default async function PublicLayout({
             
             {/* Nav Links */}
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <a href="/" className="text-white hover:text-brand-gold px-3 py-2 text-sm font-semibold tracking-wide transition-colors uppercase">Início</a>
-                <a href="/projetos" className="text-zinc-400 hover:text-brand-gold px-3 py-2 text-sm font-semibold tracking-wide transition-colors uppercase">Projetos</a>
-                <a href="/#depoimentos" className="text-zinc-400 hover:text-brand-gold px-3 py-2 text-sm font-semibold tracking-wide transition-colors uppercase">Depoimentos</a>
-                <a href="/#sobre" className="text-zinc-400 hover:text-brand-gold px-3 py-2 text-sm font-semibold tracking-wide transition-colors uppercase">Sobre</a>
-                <a href="/#contato" className="text-zinc-400 hover:text-brand-gold px-3 py-2 text-sm font-semibold tracking-wide transition-colors uppercase">Contato</a>
-              </div>
+              <HeaderNav />
             </div>
 
             {/* CTA Button */}
