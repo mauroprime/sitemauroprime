@@ -211,15 +211,18 @@ export default async function Home() {
               ))}
             </div>
           </div>
-          <div className="relative aspect-square md:aspect-auto md:h-[600px] bg-brand-dark rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5">
-             <div className="absolute inset-0 flex items-center justify-center bg-brand-dark text-white text-center p-12">
-                <div className="space-y-4 relative z-10">
-                   <User size={64} className="mx-auto text-brand-gold/60 mb-2" />
-                   <p className="text-[22px] font-serif font-medium text-brand-gold">Mauro Consultor</p>
-                   <p className="text-base text-zinc-400 font-light">Transformando dúvidas em direção segura para famílias em todo o Brasil.</p>
-                </div>
-                {/* Opcional: Gradient decorativo de fundo no card */}
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-brand-gold/5 opacity-50 blur-2xl"></div>
+          <div className="relative aspect-square md:aspect-auto md:h-[600px] bg-brand-dark rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 flex items-end">
+             <Image 
+               src="/mauro-bio.webp" 
+               alt="Mauro Consultor" 
+               fill
+               className="object-cover object-top"
+               quality={100}
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-brand-black/95 via-brand-black/40 to-transparent"></div>
+             <div className="relative z-10 p-8 md:p-12 text-center text-white space-y-4 w-full">
+                <p className="text-[22px] font-serif font-medium text-brand-gold">Mauro Consultor</p>
+                <p className="text-base text-zinc-300 font-light">Transformando dúvidas em direção segura para famílias em todo o Brasil.</p>
              </div>
           </div>
         </div>
