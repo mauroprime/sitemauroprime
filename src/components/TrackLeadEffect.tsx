@@ -9,14 +9,15 @@ type Props = {
     title: string;
     category: string | null;
     price: number | null;
-  } | null
+  } | null;
+  eventId?: string;
 }
 
 /**
  * Componente que dispara o evento de 'Lead' quando montado.
  * Ideal para ser colocado na página de 'Obrigado'.
  */
-export function TrackLeadEffect({ project }: Props) {
+export function TrackLeadEffect({ project, eventId }: Props) {
   useEffect(() => {
     // Dispara o evento de Lead padrão
     const leadData = project ? {
@@ -27,7 +28,7 @@ export function TrackLeadEffect({ project }: Props) {
       currency: 'BRL'
     } : undefined
 
-    firePixelEvent('Lead', leadData)
+    firePixelEvent('Lead', leadData, eventId)
     
     // Log para depuração em desenvolvimento
     if (process.env.NODE_ENV === 'development') {

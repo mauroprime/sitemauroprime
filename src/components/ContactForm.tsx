@@ -81,11 +81,14 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
     formData.append('utm_content', searchParams.get('utm_content') || '')
     formData.append('utm_term', searchParams.get('utm_term') || '')
 
+    const eventId = crypto.randomUUID()
+    formData.append('event_id', eventId)
+
     try {
       const result = await submitLead(formData)
       if (result.success) {
         // Redireciona para página de obrigado
-        const redirectUrl = projectSlug ? `/obrigado?projeto=${projectSlug}` : '/obrigado'
+        const redirectUrl = projectSlug ? `/obrigado?projeto=${projectSlug}&event_id=${eventId}` : `/obrigado?event_id=${eventId}`
         router.push(redirectUrl)
       } else {
         setError(result.error || 'Erro inesperado')

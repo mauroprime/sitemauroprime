@@ -52,8 +52,12 @@ export function FBPixel() {
 /**
  * Helper para disparar eventos Customizados/Standard no lado do cliente
  */
-export function firePixelEvent(eventName: string, data?: object) {
+export function firePixelEvent(eventName: string, data?: object, eventID?: string) {
   if (typeof window !== 'undefined' && (window as any).fbq) {
-    (window as any).fbq('track', eventName, data)
+    if (eventID) {
+      (window as any).fbq('track', eventName, data, { eventID })
+    } else {
+      (window as any).fbq('track', eventName, data)
+    }
   }
 }

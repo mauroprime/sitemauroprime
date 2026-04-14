@@ -247,7 +247,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
         </div>
         <TrackEventButton 
           href="#analise"
-          eventName="Contact"
+          eventName="InitiateCheckout"
           eventData={{
             content_name: project.title,
             content_category: project.category || 'Geral',

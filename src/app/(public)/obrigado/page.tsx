@@ -10,15 +10,15 @@ export const metadata = {
   description: 'Recebemos seus dados. O Mauro Consultor entrará em contato em breve.',
 }
 
-function ObrigadoContent({ projetoSlug }: { projetoSlug?: string }) {
+function ObrigadoContent({ projetoSlug, eventId }: { projetoSlug?: string, eventId?: string }) {
   return (
     <Suspense fallback={<div className="min-h-screen bg-brand-dark flex items-center justify-center"><div className="w-8 h-8 border-4 border-brand-gold border-t-transparent rounded-full animate-spin"></div></div>}>
-      <ObrigadoData projetoSlug={projetoSlug} />
+      <ObrigadoData projetoSlug={projetoSlug} eventId={eventId} />
     </Suspense>
   )
 }
 
-async function ObrigadoData({ projetoSlug }: { projetoSlug?: string }) {
+async function ObrigadoData({ projetoSlug, eventId }: { projetoSlug?: string, eventId?: string }) {
   const project = projetoSlug ? await getProjectBySlug(projetoSlug) : null
   const settings = await getSiteSettings()
 
@@ -34,12 +34,15 @@ async function ObrigadoData({ projetoSlug }: { projetoSlug?: string }) {
   return (
     <div className="min-h-screen bg-brand-dark relative overflow-hidden flex flex-col items-center justify-center p-6">
       {/* Rastreamento de Lead no Cliente */}
-      <TrackLeadEffect project={project ? {
-        id: project.id,
-        title: project.title,
-        category: project.category,
-        price: Number(project.promotional_price || project.price)
-      } : null} />
+      <TrackLeadEffect 
+        project={project ? {
+          id: project.id,
+          title: project.title,
+          category: project.category,
+          price: Number(project.promotional_price || project.price)
+        } : null} 
+        eventId={eventId}
+      />
 
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
@@ -123,7 +126,7 @@ async function ObrigadoData({ projetoSlug }: { projetoSlug?: string }) {
   )
 }
 
-export default async function Page({ searchParams }: { searchParams: { projeto?: string } }) {
-  const { projeto } = await searchParams
-  return <ObrigadoContent projetoSlug={projeto} />
+export default async function Page({ searchParams }: { searchParams: Promise<{ projeto?: string, event_id?: string }> }) {
+  const { projeto, event_id } = await searchParams
+  return <ObrigadoContent projetoSlug={projeto} eventId={event_id} />
 }

@@ -32,6 +32,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={`${inter.className} min-h-full flex flex-col`} suppressHydrationWarning>
+        <noscript>
+          <img height="1" width="1" style={{display: 'none'}}
+            src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_FB_PIXEL_ID || '2653031985079045'}&ev=PageView&noscript=1`} 
+            alt="Facebook Pixel" />
+        </noscript>
         <Suspense fallback={null}>
           <FBPixel />
         </Suspense>

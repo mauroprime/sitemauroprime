@@ -46,6 +46,8 @@ export async function submitLead(formData: FormData) {
     const utm_campaign = formData.get('utm_campaign')?.toString() || null
     const utm_content = formData.get('utm_content')?.toString() || null
     const utm_term = formData.get('utm_term')?.toString() || null
+    
+    const event_id = formData.get('event_id')?.toString() || undefined
 
     if (!name) {
       return { success: false, error: 'O nome é obrigatório.' }
@@ -97,6 +99,7 @@ export async function submitLead(formData: FormData) {
 
       await sendFBCapiEvent({
         event_name: 'Lead',
+        event_id: event_id,
         event_source_url: head.get('referer') || '',
         user_data: {
           ...userData,

@@ -7,6 +7,7 @@
 export type FBCapiEvent = {
   event_name: 'Lead' | 'Contact' | 'PageView' | 'ViewContent' | 'InitiateCheckout';
   event_time?: number; // Unix timestamp em segundos
+  event_id?: string;
   event_source_url?: string;
   user_data: {
     em?: string[]; // Email (hashed SHA256)
