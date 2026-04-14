@@ -11,6 +11,11 @@ export function FBPixel() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Dev Mode] Facebook Pixel Inicialização ignorada.')
+      return
+    }
+
     const PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID
 
     if (!PIXEL_ID) return
@@ -53,6 +58,11 @@ export function FBPixel() {
  * Helper para disparar eventos Customizados/Standard no lado do cliente
  */
 export function firePixelEvent(eventName: string, data?: object, eventID?: string) {
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Dev Mode] Evento Pixel Simulado: ${eventName}`, { data, eventID })
+    return
+  }
+
   if (typeof window !== 'undefined' && (window as any).fbq) {
     if (eventID) {
       (window as any).fbq('track', eventName, data, { eventID })
