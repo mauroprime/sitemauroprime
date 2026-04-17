@@ -64,7 +64,7 @@ export default async function SettingsPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="contact_email">E-mail Profissional</Label>
-              <Input id="contact_email" name="contact_email" type="email" defaultValue={settings?.contact_email || ''} placeholder="contato@construtoraprime.com.br" />
+              <Input id="contact_email" name="contact_email" type="email" defaultValue={settings?.contact_email || ''} placeholder="mauro@primegroupp.com.br" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="instagram_url">Link do Instagram</Label>

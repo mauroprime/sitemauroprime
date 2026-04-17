@@ -15,7 +15,7 @@ export default async function PublicLayout({
   const settings = await getSiteSettings()
   const brandName = settings?.brand_name || 'Construtora Prime'
   const whatsapp = settings?.whatsapp_number || '(11) 99999-9999'
-  const email = settings?.contact_email || 'contato@construtoraprime.com.br'
+  const email = settings?.contact_email || 'mauro@primegroupp.com.br'
 
   return (
     <div className="bg-[#000] min-h-screen">
@@ -96,7 +96,6 @@ export default async function PublicLayout({
           <div>
             <h4 className="text-white font-semibold mb-6 uppercase tracking-wider text-sm">Contato Direto</h4>
             <ul className="text-sm space-y-3">
-              <li className="flex items-center gap-2">WhatsApp: {whatsapp}</li>
               <li className="flex items-center gap-2">Email: {email}</li>
             </ul>
           </div>
