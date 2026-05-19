@@ -124,36 +124,37 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   return (
     <>
-      <div className={`w-full ${isVertical ? 'max-w-xl mx-auto' : 'max-w-[1360px]'} ${isLight ? 'bg-zinc-100 border-zinc-200 shadow-xl' : 'bg-brand-dark/60 backdrop-blur-3xl border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]'} border rounded-2xl p-5 md:p-6 lg:p-7 transition-colors duration-300`}>
-        <div className={`flex flex-col ${isVertical ? 'w-full' : 'lg:flex-row'} items-center gap-6 lg:gap-8`}>
+      <div className={`w-full ${isVertical ? 'max-w-xl mx-auto' : 'max-w-[1360px]'} ${isLight ? 'bg-zinc-100 border-zinc-200 shadow-xl' : 'bg-brand-dark/60 backdrop-blur-3xl border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]'} border rounded-3xl p-6 md:p-8 lg:p-9 transition-all duration-300`}>
+        <div className="flex flex-col w-full gap-6 md:gap-8">
           
-          {/* Type Toggle */}
-          <div className={`relative flex items-center w-full ${isVertical ? '' : 'lg:w-auto'} ${isLight ? 'bg-zinc-200 border-zinc-300' : 'bg-black/40 border-white/5'} rounded-xl p-1.5 border shrink-0`}>
-            <button 
-              onClick={() => setIntent('Construir')}
-              className={`flex-1 ${isVertical ? '' : 'lg:w-40'} py-3.5 text-xs font-black rounded-lg transition-all uppercase tracking-widest ${intent === 'Construir' ? 'text-black bg-brand-gold shadow-lg' : isLight ? 'text-zinc-500 hover:text-zinc-800' : 'text-zinc-500 hover:text-white'}`}
-            >
-              Construir
-            </button>
-            <button 
-              onClick={() => setIntent('Investir')}
-              className={`flex-1 ${isVertical ? '' : 'lg:w-40'} py-3.5 text-xs font-black rounded-lg transition-all uppercase tracking-widest ${intent === 'Investir' ? 'text-black bg-brand-gold shadow-lg' : isLight ? 'text-zinc-500 hover:text-zinc-800' : 'text-zinc-500 hover:text-white'}`}
-            >
-              Investir
-            </button>
+          {/* Type Toggle - Tabs Row */}
+          <div className={`flex ${isVertical ? 'justify-center' : 'justify-start'} w-full`}>
+            <div className={`relative flex items-center w-full sm:w-auto ${isLight ? 'bg-zinc-200 border-zinc-300' : 'bg-black/40 border-white/5'} rounded-xl p-1.5 border shrink-0`}>
+              <button 
+                onClick={() => setIntent('Construir')}
+                className={`flex-1 sm:w-44 py-3 text-xs font-black rounded-lg transition-all uppercase tracking-widest ${intent === 'Construir' ? 'text-black bg-brand-gold shadow-lg shadow-brand-gold/15' : isLight ? 'text-zinc-500 hover:text-zinc-800' : 'text-zinc-500 hover:text-white'}`}
+              >
+                Construir
+              </button>
+              <button 
+                onClick={() => setIntent('Investir')}
+                className={`flex-1 sm:w-44 py-3 text-xs font-black rounded-lg transition-all uppercase tracking-widest ${intent === 'Investir' ? 'text-black bg-brand-gold shadow-lg shadow-brand-gold/15' : isLight ? 'text-zinc-500 hover:text-zinc-800' : 'text-zinc-500 hover:text-white'}`}
+              >
+                Investir
+              </button>
+            </div>
           </div>
 
-          {!isVertical && <div className={`h-14 w-px ${isLight ? 'bg-zinc-300' : 'bg-white/10'} hidden lg:block shrink-0`}></div>}
-
-          <div className={`flex-1 grid grid-cols-1 ${isVertical ? 'gap-6' : 'md:grid-cols-3 lg:grid-cols-12 gap-6 lg:gap-8'} w-full items-center`}>
+          {/* Form Fields Row */}
+          <div className={`grid grid-cols-1 ${isVertical ? 'gap-6' : 'md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8'} w-full items-end`}>
             {/* Possuí Terreno */}
-            <div className={`relative group ${isVertical ? '' : 'md:col-span-1 lg:col-span-3'}`}>
-              <label className={`text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-500' : 'text-zinc-500'} block mb-2 ml-1`}>Possuí terreno?</label>
-              <div className="flex gap-2">
+            <div className={`relative group ${isVertical ? '' : 'lg:col-span-3'} flex flex-col`}>
+              <label className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-600' : 'text-zinc-500'} block mb-2.5 ml-1`}>Possuí terreno?</label>
+              <div className="flex gap-3">
                 <button 
                   type="button"
                   onClick={() => setHasLand(true)}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-4 text-xs font-bold transition-all border ${hasLand === true ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-4 text-xs font-black transition-all border ${hasLand === true ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
                 >
                   <CheckCircle2 size={14} className={hasLand === true ? 'opacity-100' : 'opacity-0'} />
                   SIM
@@ -161,7 +162,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 <button 
                   type="button"
                   onClick={() => setHasLand(false)}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-4 text-xs font-bold transition-all border ${hasLand === false ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-4 text-xs font-black transition-all border ${hasLand === false ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
                 >
                   <CheckCircle2 size={14} className={hasLand === false ? 'opacity-100' : 'opacity-0'} />
                   NÃO
@@ -170,51 +171,55 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
             </div>
             
             {/* Project Style */}
-            <div className={`relative group ${isVertical ? '' : 'md:col-span-1 lg:col-span-4'}`}>
-              <label className={`text-[9px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-500' : 'text-zinc-500'} block mb-2 ml-1`}>Estilo do projeto</label>
+            <div className={`relative group ${isVertical ? '' : 'lg:col-span-3'} flex flex-col`}>
+              <label className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-600' : 'text-zinc-500'} block mb-2.5 ml-1`}>Estilo do projeto</label>
               <div className="relative">
-                <HomeIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-gold w-4 h-4 transition-transform group-hover:scale-110" />
+                <HomeIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-gold w-4 h-4 transition-transform group-hover:scale-110" />
                 <select 
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className={`w-full ${isLight ? 'bg-white border-zinc-300 text-zinc-900 focus:border-brand-gold' : 'bg-white/5 border-white/10 text-zinc-300 focus:border-brand-gold'} border rounded-xl pl-10 pr-10 py-4 text-sm appearance-none focus:outline-none transition-all hover:bg-white/10 cursor-pointer`}
+                  className={`w-full ${isLight ? 'bg-white border-zinc-300 text-zinc-900 focus:border-brand-gold' : 'bg-white/5 border-white/10 text-zinc-300 focus:border-brand-gold'} border rounded-xl pl-11 pr-10 py-4 text-sm appearance-none focus:outline-none transition-all hover:bg-white/10 cursor-pointer font-bold`}
                 >
                   <option value="" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Selecione o padrão</option>
                   <option value="Padrão" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Padrão</option>
                   <option value="Médio Padrão" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Médio Padrão</option>
                   <option value="Alto Padrão" className={isLight ? 'bg-white text-zinc-900' : 'bg-brand-dark text-white'}>Alto Padrão</option>
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4 pointer-events-none" />
+                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4 pointer-events-none" />
               </div>
             </div>
 
             {/* Price Range Slider */}
-            <div className={`relative ${isVertical ? '' : 'md:col-span-1 lg:col-span-5'} flex flex-col justify-center px-2`}>
-              <div className={`flex justify-between text-[9px] ${isLight ? 'text-zinc-600' : 'text-zinc-500'} mb-2 uppercase font-black tracking-[0.15em]`}>
+            <div className={`relative ${isVertical ? '' : 'lg:col-span-3'} flex flex-col justify-center px-1 pb-1`}>
+              <div className={`flex justify-between text-[10px] ${isLight ? 'text-zinc-600' : 'text-zinc-500'} mb-2.5 uppercase font-black tracking-[0.15em]`}>
                 <span>Investimento Estimado</span>
                 <span className="text-brand-gold">R$ {investment}k - {investment > 1500 ? '2M+' : `R$ ${investment + 500}k`}</span>
               </div>
-              <input 
-                type="range" 
-                min="200" 
-                max="2000" 
-                step="50"
-                value={investment}
-                onChange={(e) => setInvestment(parseInt(e.target.value))}
-                className={`w-full cursor-pointer transition-all ${isLight ? 'text-zinc-300' : 'text-white/10'}`}
-              />
+              <div className="h-12 flex items-center">
+                <input 
+                  type="range" 
+                  min="200" 
+                  max="2000" 
+                  step="50"
+                  value={investment}
+                  onChange={(e) => setInvestment(parseInt(e.target.value))}
+                  className={`w-full cursor-pointer transition-all ${isLight ? 'text-zinc-300' : 'text-white/10'}`}
+                />
+              </div>
+            </div>
+
+            {/* Action Button */}
+            <div className={`relative ${isVertical ? '' : 'lg:col-span-3'} flex flex-col`}>
+              <button 
+                onClick={handleAnalyse}
+                disabled={!isFormValid}
+                className={`w-full px-8 py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 h-14 group ${isFormValid ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)] shadow-brand-gold/15' : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'}`}
+              >
+                <Search className={`w-4 h-4 ${isFormValid ? 'group-hover:scale-125 transition-transform duration-300' : ''}`} />
+                <span>Analisar Agora</span>
+              </button>
             </div>
           </div>
-
-          {/* Action Button */}
-          <button 
-            onClick={handleAnalyse}
-            disabled={!isFormValid}
-            className={`w-full ${isVertical ? 'w-full' : 'lg:w-auto'} px-12 py-5 rounded-xl text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 shrink-0 group ${isFormValid ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)]' : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'}`}
-          >
-            <Search className={`w-5 h-5 ${isFormValid ? 'group-hover:scale-125 transition-transform duration-300' : ''}`} />
-            <span>Analisar Agora</span>
-          </button>
         </div>
       </div>
 
