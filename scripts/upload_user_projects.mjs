@@ -56,7 +56,7 @@ const projectsData = [
     title: 'Sobrado Gourmet 100',
     short_description: 'Sobrado de 100m2 com área gourmet e churrasqueira. 3 quartos sala conjugada cozinha, 2 banheiros e lavanderia.',
     price: 240000,
-    promotional_price: 184900,
+    promotional_price: 229997,
     category: 'Médio Padrão',
     attributes_json: {
       bedrooms: 3,
