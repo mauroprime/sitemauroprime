@@ -15,7 +15,7 @@ interface HeroSearchProps {
   projectName?: string
 }
 
-function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
+function HeroSearchContent({ variant = 'vertical', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
   const isVertical = variant === 'vertical'
   const isLight = theme === 'light'
   const searchParams = useSearchParams()
@@ -124,8 +124,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   return (
     <>
-      <div className={`w-full ${isVertical ? '' : 'max-w-7xl'} ${isLight ? 'bg-zinc-100 border-zinc-200 shadow-xl' : 'bg-brand-dark/60 backdrop-blur-3xl border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]'} border rounded-2xl p-4 md:p-5 transition-colors duration-300`}>
-        <div className={`flex flex-col ${isVertical ? '' : 'xl:flex-row'} items-center gap-8`}>
+      <div className={`w-full ${isVertical ? 'max-w-xl mx-auto' : 'max-w-7xl'} ${isLight ? 'bg-zinc-100 border-zinc-200 shadow-xl' : 'bg-brand-dark/60 backdrop-blur-3xl border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]'} border rounded-2xl p-4 md:p-5 transition-colors duration-300`}>
+        <div className={`flex flex-col ${isVertical ? 'w-full' : 'xl:flex-row'} items-center gap-8`}>
           
           {/* Type Toggle */}
           <div className={`relative flex items-center w-full ${isVertical ? '' : 'xl:w-auto'} ${isLight ? 'bg-zinc-200 border-zinc-300' : 'bg-black/40 border-white/5'} rounded-xl p-1.5 border shrink-0`}>
@@ -210,7 +210,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           <button 
             onClick={handleAnalyse}
             disabled={!isFormValid}
-            className={`w-full xl:w-auto px-10 py-5 rounded-xl text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 shrink-0 group ${isFormValid ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)]' : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'}`}
+            className={`w-full ${isVertical ? 'w-full' : 'xl:w-auto'} px-10 py-5 rounded-xl text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 shrink-0 group ${isFormValid ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)]' : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'}`}
           >
             <Search className={`w-5 h-5 ${isFormValid ? 'group-hover:scale-125 transition-transform duration-300' : ''}`} />
             <span>Analisar Agora</span>
@@ -337,7 +337,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   )
 }
 
-export function HeroSearch({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
+export function HeroSearch({ variant = 'vertical', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
   return (
     <Suspense fallback={<div className="w-full h-32 bg-white/5 animate-pulse rounded-2xl"></div>}>
       <HeroSearchContent variant={variant} theme={theme} projectSlug={projectSlug} projectId={projectId} projectName={projectName} />
