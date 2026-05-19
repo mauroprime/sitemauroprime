@@ -22,7 +22,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   const router = useRouter()
 
   // Search State
-  const [intent, setIntent] = useState<'Construir' | 'Investir'>('Construir')
+  const [intent, setIntent] = useState<'Construir' | 'Investir' | null>(null)
   const [type, setType] = useState(projectName || '')
   const [investment, setInvestment] = useState(500)
 
@@ -39,7 +39,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   // Lead Form State
   const [name, setName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
-  const [hasLand, setHasLand] = useState(false)
+  const [hasLand, setHasLand] = useState<boolean | null>(null)
   const [timeframe, setTimeframe] = useState('')
 
   // WhatsApp Mask: (00) 00000-0000
@@ -61,6 +61,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   const handleAnalyse = () => {
     // Não temos mais localização obrigatória, mas podemos validar o tipo se quisermos
+    if (intent === null || hasLand === null || type === '') return
+    
     setIsOpen(true)
     
     // Dispara evento de início de checkout quando abre o modal de lead
@@ -70,6 +72,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     })
   }
 
+  const isFormValid = intent !== null && hasLand !== null && type !== ''
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsPending(true)
@@ -78,7 +82,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     const formData = new FormData()
     formData.append('name', name)
     formData.append('phone', whatsapp)
-    formData.append('intent', intent)
+    formData.append('intent', intent || '')
     formData.append('has_land', hasLand ? 'true' : 'false')
     formData.append('project_type', type)
     formData.append('investment_range', `R$ ${investment}k`)
@@ -149,17 +153,17 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 <button 
                   type="button"
                   onClick={() => setHasLand(true)}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-xs font-bold transition-all border ${hasLand ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-xs font-bold transition-all border ${hasLand === true ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
                 >
-                  <CheckCircle2 size={14} className={hasLand ? 'opacity-100' : 'opacity-0'} />
+                  <CheckCircle2 size={14} className={hasLand === true ? 'opacity-100' : 'opacity-0'} />
                   SIM
                 </button>
                 <button 
                   type="button"
                   onClick={() => setHasLand(false)}
-                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-xs font-bold transition-all border ${!hasLand ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-xs font-bold transition-all border ${hasLand === false ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20' : isLight ? 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50' : 'bg-white/5 border-white/10 text-zinc-500 hover:bg-white/10'}`}
                 >
-                  {!hasLand && <CheckCircle2 size={14} />}
+                  <CheckCircle2 size={14} className={hasLand === false ? 'opacity-100' : 'opacity-0'} />
                   NÃO
                 </button>
               </div>
@@ -205,9 +209,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           {/* Action Button */}
           <button 
             onClick={handleAnalyse}
-            className="w-full xl:w-auto bg-brand-gold hover:bg-brand-goldlight text-black px-10 py-5 rounded-xl text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 shrink-0 group shadow-[0_10px_20px_rgba(212,175,55,0.2)]"
+            disabled={!isFormValid}
+            className={`w-full xl:w-auto px-10 py-5 rounded-xl text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 shrink-0 group ${isFormValid ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)]' : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'}`}
           >
-            <Search className="w-5 h-5 group-hover:scale-125 transition-transform duration-300" />
+            <Search className={`w-5 h-5 ${isFormValid ? 'group-hover:scale-125 transition-transform duration-300' : ''}`} />
             <span>Analisar Agora</span>
           </button>
         </div>

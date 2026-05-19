@@ -24,8 +24,8 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
   // Lead Form State
   const [name, setName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
-  const [intent, setIntent] = useState<'Construir' | 'Investir'>('Construir')
-  const [hasLand, setHasLand] = useState(false)
+  const [intent, setIntent] = useState<'Construir' | 'Investir' | null>(null)
+  const [hasLand, setHasLand] = useState<boolean | null>(null)
   const [type, setType] = useState('')
   const [investment, setInvestment] = useState(500)
   const [timeframe, setTimeframe] = useState('')
@@ -64,7 +64,7 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
     const formData = new FormData()
     formData.append('name', name)
     formData.append('phone', whatsapp)
-    formData.append('intent', intent)
+    formData.append('intent', intent || '')
     formData.append('has_land', hasLand ? 'true' : 'false')
     formData.append('project_type', type)
     formData.append('investment_range', `R$ ${investment}k`)
@@ -137,17 +137,17 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
             <button 
               type="button"
               onClick={() => setHasLand(true)}
-              className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold transition-all border ${hasLand ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20' : 'bg-brand-black border-white/10 text-zinc-500 hover:bg-white/5'}`}
+              className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold transition-all border ${hasLand === true ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20' : 'bg-brand-black border-white/10 text-zinc-500 hover:bg-white/5'}`}
             >
-              <CheckCircle2 size={14} className={hasLand ? 'opacity-100' : 'opacity-0'} />
+              <CheckCircle2 size={14} className={hasLand === true ? 'opacity-100' : 'opacity-0'} />
               SIM
             </button>
             <button 
               type="button"
               onClick={() => setHasLand(false)}
-              className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold transition-all border ${!hasLand ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20' : 'bg-brand-black border-white/10 text-zinc-500 hover:bg-white/5'}`}
+              className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-xs font-bold transition-all border ${hasLand === false ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20' : 'bg-brand-black border-white/10 text-zinc-500 hover:bg-white/5'}`}
             >
-              {!hasLand && <CheckCircle2 size={14} />}
+              <CheckCircle2 size={14} className={hasLand === false ? 'opacity-100' : 'opacity-0'} />
               NÃO
             </button>
           </div>
@@ -248,8 +248,12 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
 
       <button 
         type="submit" 
-        disabled={isPending}
-        className="w-full bg-gradient-to-r from-brand-gold to-brand-goldlight text-brand-black rounded-xl font-bold h-16 hover:opacity-90 transition-all duration-300 disabled:opacity-70 shadow-[0_10px_30px_rgba(212,175,55,0.2)] uppercase tracking-widest text-sm mt-4"
+        disabled={isPending || intent === null || hasLand === null || type === ''}
+        className={`w-full rounded-xl font-bold h-16 transition-all duration-300 uppercase tracking-widest text-sm mt-4 ${
+          intent !== null && hasLand !== null && type !== ''
+            ? 'bg-gradient-to-r from-brand-gold to-brand-goldlight text-brand-black hover:opacity-90 shadow-[0_10px_30px_rgba(212,175,55,0.2)]'
+            : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'
+        }`}
       >
         {isPending ? 'Enviando...' : 'Solicitar Análise de Projeto'}
       </button>
