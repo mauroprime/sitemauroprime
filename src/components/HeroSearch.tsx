@@ -13,22 +13,46 @@ interface HeroSearchProps {
   projectSlug?: string
   projectId?: string
   projectName?: string
+  projectPrice?: number
 }
 
-function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
+function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName, projectPrice }: HeroSearchProps) {
   const isVertical = variant === 'vertical'
   const isLight = theme === 'light'
   const searchParams = useSearchParams()
   const router = useRouter()
 
+  // Orçamento dinâmico baseado no preço do projeto
+  let minVal = 200
+  let maxVal = 2000
+  let stepVal = 50
+  let initialVal = 500
+  const rangePlus = projectPrice ? (projectPrice < 200000 ? 50 : 100) : 500
+
+  if (projectPrice) {
+    const priceK = projectPrice / 1000
+    minVal = Math.max(30, Math.floor((priceK * 0.7) / 5) * 5)
+    maxVal = Math.max(100, Math.ceil((priceK * 1.5) / 5) * 5)
+    stepVal = 5
+    initialVal = Math.floor(priceK / 5) * 5
+  }
+
   // Search State
   const [intent, setIntent] = useState<'Construir' | 'Investir' | null>(null)
   const [type, setType] = useState(projectName || '')
-  const [investment, setInvestment] = useState(500)
+  const [investment, setInvestment] = useState(initialVal)
 
   useEffect(() => {
     if (projectName) setType(projectName)
   }, [projectName])
+
+  // Ajusta o valor padrão do investimento se o preço do projeto carregar
+  useEffect(() => {
+    if (projectPrice) {
+      const priceK = projectPrice / 1000
+      setInvestment(Math.floor(priceK / 5) * 5)
+    }
+  }, [projectPrice])
   
   // Modal State
   const [isOpen, setIsOpen] = useState(false)
@@ -109,7 +133,21 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
         setTimeout(() => {
           setIsOpen(false)
           setIsSuccess(false)
-          const redirectUrl = projectSlug ? `/obrigado?projeto=${projectSlug}&event_id=${eventId}` : `/obrigado?event_id=${eventId}`
+          
+          const params = new URLSearchParams()
+          if (projectSlug) params.append('projeto', projectSlug)
+          if (eventId) params.append('event_id', eventId)
+          params.append('name', name)
+          params.append('phone', whatsapp)
+          params.append('intent', intent || '')
+          params.append('has_land', hasLand ? 'true' : 'false')
+          params.append('project_type', type)
+          
+          const labelUpper = projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)
+          params.append('investment', `R$ ${investment}k a ${labelUpper}`)
+          params.append('timeframe', timeframe)
+
+          const redirectUrl = `/obrigado?${params.toString()}`
           router.push(redirectUrl)
         }, 1500)
       } else {
@@ -193,14 +231,16 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
             <div className={`relative ${isVertical ? '' : 'lg:col-span-3'} flex flex-col justify-center px-1 pb-1`}>
               <div className={`flex justify-between text-[10px] ${isLight ? 'text-zinc-600' : 'text-zinc-500'} mb-2.5 uppercase font-black tracking-[0.15em]`}>
                 <span>Investimento Estimado</span>
-                <span className="text-brand-gold">R$ {investment}k - {investment > 1500 ? '2M+' : `R$ ${investment + 500}k`}</span>
+                <span className="text-brand-gold">
+                  R$ {investment}k - {projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}
+                </span>
               </div>
               <div className="h-12 flex items-center">
                 <input 
                   type="range" 
-                  min="200" 
-                  max="2000" 
-                  step="50"
+                  min={minVal} 
+                  max={maxVal} 
+                  step={stepVal}
                   value={investment}
                   onChange={(e) => setInvestment(parseInt(e.target.value))}
                   className={`w-full cursor-pointer transition-all ${isLight ? 'text-zinc-300' : 'text-white/10'}`}
@@ -342,10 +382,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   )
 }
 
-export function HeroSearch({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName }: HeroSearchProps) {
+export function HeroSearch({ variant = 'horizontal', theme = 'dark', projectSlug, projectId, projectName, projectPrice }: HeroSearchProps) {
   return (
     <Suspense fallback={<div className="w-full h-32 bg-white/5 animate-pulse rounded-2xl"></div>}>
-      <HeroSearchContent variant={variant} theme={theme} projectSlug={projectSlug} projectId={projectId} projectName={projectName} />
+      <HeroSearchContent variant={variant} theme={theme} projectSlug={projectSlug} projectId={projectId} projectName={projectName} projectPrice={projectPrice} />
     </Suspense>
   )
 }

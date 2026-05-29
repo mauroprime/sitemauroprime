@@ -193,7 +193,14 @@ export default async function ProjectDetailsPage({ params }: Props) {
                   <p className="text-xs text-zinc-500">Inicie sua orientação técnica personalizada para este projeto.</p>
                 </div>
                 
-                <HeroSearch variant="vertical" theme="light" projectSlug={project.slug} projectId={project.id} projectName={project.title} />
+                <HeroSearch 
+                  variant="vertical" 
+                  theme="light" 
+                  projectSlug={project.slug} 
+                  projectId={project.id} 
+                  projectName={project.title} 
+                  projectPrice={project.promotional_price ? Number(project.promotional_price) : (project.price ? Number(project.price) : undefined)}
+                />
                 
                 <p className="text-[10px] text-center text-zinc-400 mt-6 uppercase tracking-widest leading-relaxed">
                   Atendimento focado em clareza técnica e segurança financeira.

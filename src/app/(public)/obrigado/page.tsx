@@ -10,24 +10,54 @@ export const metadata = {
   description: 'Recebemos seus dados. O Mauro Consultor entrará em contato em breve.',
 }
 
-function ObrigadoContent({ projetoSlug, eventId }: { projetoSlug?: string, eventId?: string }) {
+interface ObrigadoParams {
+  projeto?: string
+  event_id?: string
+  name?: string
+  phone?: string
+  intent?: string
+  has_land?: string
+  project_type?: string
+  investment?: string
+  timeframe?: string
+}
+
+function ObrigadoContent({ params }: { params: ObrigadoParams }) {
   return (
     <Suspense fallback={<div className="min-h-screen bg-brand-dark flex items-center justify-center"><div className="w-8 h-8 border-4 border-brand-gold border-t-transparent rounded-full animate-spin"></div></div>}>
-      <ObrigadoData projetoSlug={projetoSlug} eventId={eventId} />
+      <ObrigadoData params={params} />
     </Suspense>
   )
 }
 
-async function ObrigadoData({ projetoSlug, eventId }: { projetoSlug?: string, eventId?: string }) {
-  const project = projetoSlug ? await getProjectBySlug(projetoSlug) : null
+async function ObrigadoData({ params }: { params: ObrigadoParams }) {
+  const { projeto, event_id, name, phone, intent, has_land, project_type, investment, timeframe } = params
+  const project = projeto ? await getProjectBySlug(projeto) : null
   const settings = await getSiteSettings()
 
   const whatsappNumber = '554195907430' // Número solicitado: +55 41 9590-7430
   
-  // Mensagem dinâmica baseada no projeto
-  const message = project 
-    ? `Olá Mauro! Acabei de ver o projeto *${project.title}* no seu site e preenchi meus dados. Gostaria de agilizar minha análise e entender os próximos passos para este projeto especificamente.`
-    : 'Olá Mauro! Acabei de preencher meus dados no site da Construtora Prime. Gostaria de uma consultoria inicial sobre os projetos e como posso iniciar meu planejamento com você.'
+  // Mensagem dinâmica baseada no projeto e nas respostas
+  let message = ''
+  if (name && phone) {
+    const terrenoStr = has_land === 'true' ? 'Sim' : 'Não'
+    const projName = project ? project.title : (project_type || 'Geral')
+    message = `Olá Mauro! Acabei de simular no site para o projeto *${projName}* e gostaria de agilizar meu atendimento. Aqui estão as informações da minha simulação:
+
+*Nome:* ${name}
+*WhatsApp:* ${phone}
+*Objetivo:* ${intent || 'Não informado'}
+*Possuo Terreno:* ${terrenoStr}
+*Padrão do Projeto:* ${project_type || 'Não informado'}
+*Investimento Pretendido:* ${investment || 'Não informado'}
+*Prazo para iniciar:* ${timeframe || 'Não informado'}
+
+Poderia me orientar com os próximos passos?`
+  } else {
+    message = project 
+      ? `Olá Mauro! Acabei de ver o projeto *${project.title}* no seu site e preenchi meus dados. Gostaria de agilizar minha análise e entender os próximos passos para este projeto especificamente.`
+      : 'Olá Mauro! Acabei de preencher meus dados no site da Construtora Prime. Gostaria de uma consultoria inicial sobre os projetos e como posso iniciar meu planejamento com você.'
+  }
   
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
 
@@ -41,7 +71,7 @@ async function ObrigadoData({ projetoSlug, eventId }: { projetoSlug?: string, ev
           category: project.category,
           price: Number(project.promotional_price || project.price)
         } : null} 
-        eventId={eventId}
+        eventId={event_id}
       />
 
       {/* Background Decor */}
@@ -126,7 +156,7 @@ async function ObrigadoData({ projetoSlug, eventId }: { projetoSlug?: string, ev
   )
 }
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ projeto?: string, event_id?: string }> }) {
-  const { projeto, event_id } = await searchParams
-  return <ObrigadoContent projetoSlug={projeto} eventId={event_id} />
+export default async function Page({ searchParams }: { searchParams: Promise<ObrigadoParams> }) {
+  const resolvedParams = await searchParams
+  return <ObrigadoContent params={resolvedParams} />
 }

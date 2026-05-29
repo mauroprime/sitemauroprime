@@ -98,7 +98,7 @@ export async function sendFBCapiEvent(event: FBCapiEvent) {
  * Helper para normalizar e hashear dados de usuário antes de enviar
  */
 export async function prepareUserData(email?: string, phone?: string) {
-  const em = email ? [await hash(email)] : undefined;
+  const em = email && email !== 'não-informado@mauro.com' && !email.includes('não-informado') ? [await hash(email)] : undefined;
   const ph = phone ? [await hash(phone.replace(/\D/g, ''))] : undefined;
   return { em, ph };
 }

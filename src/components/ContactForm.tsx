@@ -11,9 +11,10 @@ import { firePixelEvent } from './FBPixel'
 interface ContactFormProps {
   projectSlug?: string
   projectId?: string
+  projectPrice?: number
 }
 
-function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
+function ContactFormContent({ projectSlug, projectId, projectPrice }: ContactFormProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   
@@ -21,14 +22,37 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [hasStartedFilling, setHasStartedFilling] = useState(false)
 
+  // Orçamento dinâmico baseado no preço do projeto
+  let minVal = 200
+  let maxVal = 2000
+  let stepVal = 50
+  let initialVal = 500
+  const rangePlus = projectPrice ? (projectPrice < 200000 ? 50 : 100) : 500
+
+  if (projectPrice) {
+    const priceK = projectPrice / 1000
+    minVal = Math.max(30, Math.floor((priceK * 0.7) / 5) * 5)
+    maxVal = Math.max(100, Math.ceil((priceK * 1.5) / 5) * 5)
+    stepVal = 5
+    initialVal = Math.floor(priceK / 5) * 5
+  }
+
   // Lead Form State
   const [name, setName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [intent, setIntent] = useState<'Construir' | 'Investir' | null>(null)
   const [hasLand, setHasLand] = useState<boolean | null>(null)
   const [type, setType] = useState('')
-  const [investment, setInvestment] = useState(500)
+  const [investment, setInvestment] = useState(initialVal)
   const [timeframe, setTimeframe] = useState('')
+
+  // Ajusta o valor padrão do investimento se o preço do projeto carregar
+  React.useEffect(() => {
+    if (projectPrice) {
+      const priceK = projectPrice / 1000
+      setInvestment(Math.floor(priceK / 5) * 5)
+    }
+  }, [projectPrice])
 
   const handleFocus = () => {
     if (!hasStartedFilling) {
@@ -88,7 +112,20 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
       const result = await submitLead(formData)
       if (result.success) {
         // Redireciona para página de obrigado
-        const redirectUrl = projectSlug ? `/obrigado?projeto=${projectSlug}&event_id=${eventId}` : `/obrigado?event_id=${eventId}`
+        const params = new URLSearchParams()
+        if (projectSlug) params.append('projeto', projectSlug)
+        if (eventId) params.append('event_id', eventId)
+        params.append('name', name)
+        params.append('phone', whatsapp)
+        params.append('intent', intent || '')
+        params.append('has_land', hasLand ? 'true' : 'false')
+        params.append('project_type', type)
+        
+        const labelUpper = projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)
+        params.append('investment', `R$ ${investment}k a ${labelUpper}`)
+        params.append('timeframe', timeframe)
+
+        const redirectUrl = `/obrigado?${params.toString()}`
         router.push(redirectUrl)
       } else {
         setError(result.error || 'Erro inesperado')
@@ -177,13 +214,15 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
       <div className="space-y-4 pt-2">
         <div className="flex justify-between text-[10px] text-zinc-500 uppercase font-black tracking-widest px-1">
           <span>Investimento Estimado</span>
-          <span className="text-brand-gold">R$ {investment}k - {investment > 1500 ? '2M+' : `R$ ${investment + 500}k`}</span>
+          <span className="text-brand-gold">
+            R$ {investment}k - {projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}
+          </span>
         </div>
         <input 
           type="range" 
-          min="200" 
-          max="2000" 
-          step="50"
+          min={minVal} 
+          max={maxVal} 
+          step={stepVal}
           value={investment}
           onChange={(e) => setInvestment(parseInt(e.target.value))}
           className="w-full cursor-pointer transition-all text-white/10"
@@ -261,10 +300,10 @@ function ContactFormContent({ projectSlug, projectId }: ContactFormProps) {
   )
 }
 
-export function ContactForm({ projectSlug, projectId }: ContactFormProps) {
+export function ContactForm({ projectSlug, projectId, projectPrice }: ContactFormProps) {
   return (
     <Suspense fallback={<div className="h-64 bg-white/5 animate-pulse rounded-2xl"></div>}>
-      <ContactFormContent projectSlug={projectSlug} projectId={projectId} />
+      <ContactFormContent projectSlug={projectSlug} projectId={projectId} projectPrice={projectPrice} />
     </Suspense>
   )
 }
