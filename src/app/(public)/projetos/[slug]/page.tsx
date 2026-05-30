@@ -62,7 +62,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
   const whatsappUrl = `https://wa.me/${settings?.whatsapp_number?.replace(/\D/g, '') || '5541999999999'}?text=Olá, tenho interesse no projeto *${project.title}*${isPromotional ? ' que está em oferta!' : ''}`
 
   return (
-    <div className="w-full flex flex-col bg-background text-foreground pb-24 lg:pb-0 relative">
+    <div className="w-full flex flex-col bg-brand-black text-white pb-24 lg:pb-0 relative">
       
       {/* HERO / CARROSSEL PRINCIPAL */}
       <section className="relative w-full h-[60vh] md:h-[75vh] bg-zinc-950 overflow-hidden">
@@ -76,7 +76,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
         <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent pt-32 pb-12 pointer-events-none">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 pointer-events-auto">
             {project.category && (
-              <span className="inline-block px-3 py-1 bg-primary text-primary-foreground text-sm font-bold rounded-full mb-4">
+              <span className="inline-block px-3 py-1 bg-brand-gold text-black text-sm font-bold rounded-full mb-4">
                 {project.category}
               </span>
             )}
@@ -101,14 +101,14 @@ export default async function ProjectDetailsPage({ params }: Props) {
             
             {/* Descrição Curta (Destaque) */}
             {project.short_description && (
-              <p className="text-xl md:text-2xl font-medium text-zinc-800 leading-relaxed border-l-4 border-primary pl-6">
+              <p className="text-xl md:text-2xl font-medium text-zinc-200 leading-relaxed border-l-4 border-brand-gold pl-6">
                 {project.short_description}
               </p>
             )}
 
             {/* Descrição Completa */}
             {project.full_description && (
-              <div className="prose prose-zinc max-w-none text-zinc-600">
+              <div className="prose prose-invert prose-zinc max-w-none text-zinc-400">
                 <p className="whitespace-pre-line">{project.full_description}</p>
               </div>
             )}
@@ -117,10 +117,10 @@ export default async function ProjectDetailsPage({ params }: Props) {
 
           {/* LADO DIREITO: Informações de Venda (Sidebar - 40%) */}
           <div className="lg:col-span-4">
-            <div className="sticky top-24 bg-card border rounded-2xl p-8 shadow-sm space-y-8">
+            <div className="sticky top-24 bg-brand-dark border border-white/10 rounded-2xl p-8 shadow-2xl space-y-8">
               
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-[0.2em]">Investimento</p>
+                <p className="text-sm font-semibold text-zinc-500 uppercase tracking-[0.2em]">Investimento</p>
                 {project.price ? (
                   <div className="flex flex-col">
                      {project.promotional_price && Number(project.promotional_price) < Number(project.price) ? (
@@ -147,37 +147,37 @@ export default async function ProjectDetailsPage({ params }: Props) {
               </div>
 
               {attributeList.length > 0 ? (
-                <div className="space-y-4 pt-6 border-t border-zinc-100">
-                  <h4 className="font-semibold text-zinc-900 mb-4">Diferenciais do Imóvel</h4>
+                <div className="space-y-4 pt-6 border-t border-white/10">
+                  <h4 className="font-semibold text-white mb-4">Diferenciais do Imóvel</h4>
                   <div className="grid grid-cols-1 gap-4">
                     {attributeList.map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 text-zinc-700 bg-zinc-50 p-3 rounded-lg border border-zinc-100">
-                        <span className="text-primary">{item.icon}</span>
+                      <div key={i} className="flex items-center gap-3 text-zinc-300 bg-white/5 p-3 rounded-lg border border-white/5">
+                        <span className="text-brand-gold">{item.icon}</span>
                         <span className="text-sm font-medium">{item.value}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className="pt-6 border-t border-zinc-100 flex items-center justify-center min-h-[80px]">
-                   <span className="text-sm border border-dashed px-4 py-2 rounded-lg text-zinc-400">Características sob consulta</span>
+                <div className="pt-6 border-t border-white/10 flex items-center justify-center min-h-[80px]">
+                   <span className="text-sm border border-dashed border-white/10 px-4 py-2 rounded-lg text-zinc-400">Características sob consulta</span>
                 </div>
               )}
 
               {/* Seção de Plantas do Projeto */}
               {Array.isArray(project.floor_plans) && project.floor_plans.length > 0 && (
-                <div className="space-y-4 pt-6 border-t border-zinc-100">
-                  <h4 className="font-semibold text-zinc-900 mb-4">Plantas do Projeto</h4>
+                <div className="space-y-4 pt-6 border-t border-white/10">
+                  <h4 className="font-semibold text-white mb-4">Plantas do Projeto</h4>
                   <div className="grid grid-cols-2 gap-3">
                     {(project.floor_plans as string[] || []).map((url: string, i: number) => (
-                      <div key={i} className="group relative aspect-square bg-white border rounded-xl overflow-hidden cursor-zoom-in shadow-sm hover:shadow-md transition-all">
+                      <div key={i} className="group relative aspect-square bg-white border border-white/10 rounded-xl overflow-hidden cursor-zoom-in shadow-sm hover:shadow-md transition-all">
                         <img 
                           src={url} 
                           alt={`Planta ${i + 1}`} 
                           className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110" 
                         />
                         <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <span className="text-[10px] font-bold bg-white/90 px-2 py-1 rounded-full shadow-sm">Ver Planta</span>
+                          <span className="text-[10px] font-bold bg-black/90 px-2 py-1 rounded-full shadow-sm text-white">Ver Planta</span>
                         </div>
                         <a href={url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10" />
                       </div>
@@ -187,15 +187,15 @@ export default async function ProjectDetailsPage({ params }: Props) {
               )}
 
               {/* Nova seção de Análise Consultiva com HeroSearch Vertical */}
-              <div id="analise" className="pt-8 border-t border-zinc-100 flex flex-col items-center">
+              <div id="analise" className="pt-8 border-t border-white/10 flex flex-col items-center">
                 <div className="text-center mb-6">
-                  <h4 className="font-serif text-xl text-zinc-900 mb-2">Análise Consultiva</h4>
-                  <p className="text-xs text-zinc-500">Inicie sua orientação técnica personalizada para este projeto.</p>
+                  <h4 className="font-serif text-xl text-white mb-2">Análise Consultiva</h4>
+                  <p className="text-xs text-zinc-400">Inicie sua orientação técnica personalizada para este projeto.</p>
                 </div>
                 
                 <HeroSearch 
                   variant="vertical" 
-                  theme="light" 
+                  theme="dark" 
                   projectSlug={project.slug} 
                   projectId={project.id} 
                   projectName={project.title} 
@@ -215,13 +215,13 @@ export default async function ProjectDetailsPage({ params }: Props) {
 
       {/* PROJETOS RELACIONADOS */}
       {relatedProjects && relatedProjects.length > 0 && (
-        <section className="py-24 bg-zinc-50 border-t border-zinc-200">
+        <section className="py-24 bg-brand-black border-t border-white/10">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Você também pode se interessar</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-12 text-center text-white">Você também pode se interessar</h2>
             
             <div className="flex overflow-x-auto lg:grid lg:grid-cols-3 gap-6 pb-6 lg:pb-0 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
               {relatedProjects.map((relProject) => (
-                <div key={relProject.id} className="min-w-[85vw] sm:min-w-[40vw] lg:min-w-0 snap-center group rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden flex flex-col transition-all hover:shadow-md relative">
+                <div key={relProject.id} className="min-w-[85vw] sm:min-w-[40vw] lg:min-w-0 snap-center group rounded-xl border border-white/5 bg-brand-dark text-white shadow-sm overflow-hidden flex flex-col transition-all hover:shadow-md relative">
                   <div className="aspect-[4/3] bg-muted w-full relative overflow-hidden">
                     <ImageCarousel 
                       images={[relProject.cover_image_url, ...(relProject.gallery_images as string[] || [])].filter((img): img is string => !!img)} 
@@ -229,9 +229,9 @@ export default async function ProjectDetailsPage({ params }: Props) {
                     />
                   </div>
                   <a href={`/projetos/${relProject.slug}`} className="p-6 flex-1 flex flex-col">
-                    <div className="text-sm font-semibold text-primary mb-2">{relProject.category || 'Destaque'}</div>
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{relProject.title}</h3>
-                    <div className="mt-auto pt-4 border-t w-full">
+                    <div className="text-sm font-semibold text-brand-gold mb-2">{relProject.category || 'Destaque'}</div>
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-brand-gold transition-colors">{relProject.title}</h3>
+                    <div className="mt-auto pt-4 border-t border-white/5 w-full">
                       <span className="font-semibold text-sm">
                         {relProject.price ? `R$ ${Number(relProject.price).toLocaleString('pt-BR')}` : 'Consulte valores'}
                       </span>
@@ -245,10 +245,10 @@ export default async function ProjectDetailsPage({ params }: Props) {
       )}
 
       {/* CTA MOBILE FIXO NO RODAPÉ */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-50 lg:hidden flex gap-4 items-center justify-between">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-brand-black border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-50 lg:hidden flex gap-4 items-center justify-between">
         <div className="flex-1">
-          <p className="text-xs text-muted-foreground uppercase font-semibold">Investimento</p>
-          <p className="font-bold text-lg leading-tight text-zinc-900 border-l-[3px] border-primary pl-2 mt-1">
+          <p className="text-xs text-zinc-500 uppercase font-semibold">Investimento</p>
+          <p className="font-bold text-lg leading-tight text-white border-l-[3px] border-brand-gold pl-2 mt-1">
             {project.price ? `R$ ${Number(project.promotional_price || project.price).toLocaleString('pt-BR')}` : 'Sob Consulta'}
           </p>
         </div>

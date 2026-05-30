@@ -39,12 +39,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   // Search State
   const [intent, setIntent] = useState<'Construir' | 'Investir' | null>(null)
-  const [type, setType] = useState(projectName || '')
+  const [type, setType] = useState('')
   const [investment, setInvestment] = useState(initialVal)
-
-  useEffect(() => {
-    if (projectName) setType(projectName)
-  }, [projectName])
 
   // Ajusta o valor padrão do investimento se o preço do projeto carregar
   useEffect(() => {
