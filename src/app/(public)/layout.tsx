@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getSiteSettings } from '@/services/public'
 import { HeaderNav } from '@/components/HeaderNav'
+import { SmoothScroll } from '@/components/SmoothScroll'
 
 export const metadata: Metadata = {
   title: 'MF Projetos & Obras',
@@ -19,6 +20,7 @@ export default async function PublicLayout({
 
   return (
     <div className="bg-[#000] min-h-screen">
+      <SmoothScroll />
       <div className="max-w-[1920px] mx-auto w-full relative bg-brand-black min-h-screen shadow-2xl overflow-hidden">
         <header className="fixed top-0 left-1/2 -translate-x-1/2 z-[60] w-full max-w-[1920px] backdrop-blur-md border-b border-white/5 bg-brand-black/95 shadow-lg">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
