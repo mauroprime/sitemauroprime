@@ -86,6 +86,10 @@ export async function createProject(formData: FormData) {
     garage_info: formData.get('garage_info')?.toString() || '',
   }
 
+  // Legendas para galeria
+  const galleryCaptionsRaw = formData.get('gallery_captions')?.toString() || ''
+  const gallery_captions = galleryCaptionsRaw.split('\n').map(s => s.trim()).filter(Boolean)
+
   const payload: ProjectInsert = {
       title,
       slug,
@@ -96,6 +100,7 @@ export async function createProject(formData: FormData) {
       category,
       cover_image_url,
       gallery_images,
+      gallery_captions,
       floor_plans,
       is_featured,
       is_promotional: !!promotional_price,
@@ -182,18 +187,45 @@ export async function updateProject(id: string, formData: FormData) {
   const deleteFloorPlansURL = formData.getAll('delete_floor_plans').map(String)
 
   // Fetch das imagens atuais para poder remover ou adicionar
-  const { data: proj } = await supabase.from('projects').select('gallery_images, floor_plans').eq('id', id).single()
+  const { data: proj } = await supabase.from('projects').select('gallery_images, gallery_captions, floor_plans').eq('id', id).single()
   let currentGallery = Array.isArray((proj as any)?.gallery_images) ? (proj as any).gallery_images : []
+  let currentCaptions = Array.isArray((proj as any)?.gallery_captions) ? (proj as any).gallery_captions : []
   let currentPlans = Array.isArray((proj as any)?.floor_plans) ? (proj as any).floor_plans : []
+
+  // Caption edits from form (mapped by URL)
+  const captionUrls = formData.getAll('gallery_caption_url').map(String)
+  const captionValues = formData.getAll('gallery_caption').map(String)
+  const captionMap: Record<string, string> = {}
+  captionUrls.forEach((url, i) => { captionMap[url] = captionValues[i] || '' })
+
+  // New captions for uploaded images
+  const newCaptionsRaw = formData.get('new_gallery_captions')?.toString() || ''
+  const newCaptions = newCaptionsRaw.split('\n').map(s => s.trim()).filter(Boolean)
 
   // Aplica remoções
   if (deleteGalleryImagesURL.length > 0) {
-    currentGallery = currentGallery.filter((url: string) => !deleteGalleryImagesURL.includes(url))
+    const kept: string[] = []
+    const keptCaps: string[] = []
+    currentGallery.forEach((url: string, i: number) => {
+      if (!deleteGalleryImagesURL.includes(url)) {
+        kept.push(url)
+        keptCaps.push(captionMap[url] ?? currentCaptions[i] ?? '')
+      }
+    })
+    currentGallery = kept
+    currentCaptions = keptCaps
+  } else {
+    // Apply caption edits even without deletions
+    currentCaptions = currentGallery.map((url: string, i: number) => 
+      captionMap[url] !== undefined ? captionMap[url] : (currentCaptions[i] || '')
+    )
   }
+
   if (deleteFloorPlansURL.length > 0) {
     currentPlans = currentPlans.filter((url: string) => !deleteFloorPlansURL.includes(url))
   }
 
+  let newUploadedUrls: string[] = []
 
   try {
     if (coverImageFile && coverImageFile.size > 0) {
@@ -204,8 +236,9 @@ export async function updateProject(id: string, formData: FormData) {
     }
     
     if (validGalleryFiles.length > 0) {
-      const newUploadedUrls = await Promise.all(validGalleryFiles.map(f => uploadToStorage(supabase, f)))
+      newUploadedUrls = await Promise.all(validGalleryFiles.map(f => uploadToStorage(supabase, f)))
       currentGallery = [...currentGallery, ...newUploadedUrls]
+      currentCaptions = [...currentCaptions, ...newCaptions.slice(0, newUploadedUrls.length)]
     }
 
     if (validFloorPlansFiles.length > 0) {
@@ -220,6 +253,13 @@ export async function updateProject(id: string, formData: FormData) {
   // Atualiza as arrays se houver mudança
   if (validGalleryFiles.length > 0 || deleteGalleryImagesURL.length > 0) {
     updates.gallery_images = currentGallery
+    updates.gallery_captions = currentCaptions
+  } else {
+    // Still save caption edits even without gallery changes
+    const hasCaptionEdit = captionUrls.some(url => captionMap[url] !== '')
+    if (hasCaptionEdit) {
+      updates.gallery_captions = currentCaptions
+    }
   }
   if (validFloorPlansFiles.length > 0 || deleteFloorPlansURL.length > 0) {
     updates.floor_plans = currentPlans

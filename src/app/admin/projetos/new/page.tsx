@@ -126,6 +126,10 @@ export default function NewProjectPage() {
                   />
                   <p className="text-xs text-muted-foreground">Você pode selecionar várias imagens de uma vez para a galeria.</p>
                 </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium">Legendas das imagens</Label>
+                  <Textarea name="gallery_captions" placeholder="Uma legenda por linha, na mesma ordem das imagens selecionadas" rows={2} className="text-xs" />
+                </div>
               </div>
 
               <div className="space-y-4 pt-4 border-t bg-zinc-50/50 p-4 rounded-xl border-dashed border-2">

@@ -163,6 +163,8 @@ export default async function EditProjectPage({ params }: { params: { id: string
                         <div className="relative h-20 w-20 overflow-hidden rounded border shadow-sm">
                           <img src={url} alt={`Galeria ${idx}`} className="h-full w-full object-cover" />
                         </div>
+                        <input type="hidden" name="gallery_caption_url" value={url} />
+                        <input name="gallery_caption" defaultValue={(project.gallery_captions as any)?.[idx] || ''} placeholder="Legenda" className="w-28 text-[11px] p-1 border rounded text-center" />
                         <label className="flex items-center gap-1 text-xs text-red-600 cursor-pointer hover:underline font-medium">
                           <input type="checkbox" name="delete_gallery_images" value={url} className="accent-red-600 scale-110" />
                           Excluir
@@ -181,6 +183,10 @@ export default async function EditProjectPage({ params }: { params: { id: string
                     className="cursor-pointer file:cursor-pointer file:font-semibold text-muted-foreground file:text-foreground hover:bg-zinc-50"
                   />
                   <p className="text-xs text-muted-foreground">Novas imagens enviadas serão anexadas à sua galeria existente.</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium">Legendas para novas imagens</Label>
+                  <Textarea name="new_gallery_captions" placeholder="Uma legenda por linha, na mesma ordem das imagens selecionadas" rows={2} className="text-xs" />
                 </div>
               </div>
 
