@@ -86,9 +86,11 @@ export async function createProject(formData: FormData) {
     garage_info: formData.get('garage_info')?.toString() || '',
   }
 
-  // Legendas para galeria
+  // Legendas
+  const coverCaption = formData.get('cover_caption')?.toString() || ''
   const galleryCaptionsRaw = formData.get('gallery_captions')?.toString() || ''
-  const gallery_captions = galleryCaptionsRaw.split('\n').map(s => s.trim()).filter(Boolean)
+  const galleryCaptionsArr = galleryCaptionsRaw.split('\n').map(s => s.trim()).filter(Boolean)
+  const gallery_captions = [coverCaption, ...galleryCaptionsArr]
 
   const payload: ProjectInsert = {
       title,
@@ -198,6 +200,9 @@ export async function updateProject(id: string, formData: FormData) {
   const captionMap: Record<string, string> = {}
   captionUrls.forEach((url, i) => { captionMap[url] = captionValues[i] || '' })
 
+  // Cover caption
+  const coverCaption = formData.get('cover_caption')?.toString() || ''
+
   // New captions for uploaded images
   const newCaptionsRaw = formData.get('new_gallery_captions')?.toString() || ''
   const newCaptions = newCaptionsRaw.split('\n').map(s => s.trim()).filter(Boolean)
@@ -253,14 +258,9 @@ export async function updateProject(id: string, formData: FormData) {
   // Atualiza as arrays se houver mudança
   if (validGalleryFiles.length > 0 || deleteGalleryImagesURL.length > 0) {
     updates.gallery_images = currentGallery
-    updates.gallery_captions = currentCaptions
-  } else {
-    // Still save caption edits even without gallery changes
-    const hasCaptionEdit = captionUrls.some(url => captionMap[url] !== '')
-    if (hasCaptionEdit) {
-      updates.gallery_captions = currentCaptions
-    }
   }
+  // Always save captions (cover + gallery)
+  updates.gallery_captions = [coverCaption, ...currentCaptions]
   if (validFloorPlansFiles.length > 0 || deleteFloorPlansURL.length > 0) {
     updates.floor_plans = currentPlans
   }

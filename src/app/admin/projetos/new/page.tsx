@@ -111,6 +111,7 @@ export default function NewProjectPage() {
                   className="cursor-pointer file:cursor-pointer file:font-semibold text-muted-foreground file:text-foreground hover:bg-zinc-50"
                 />
                 <p className="text-xs text-muted-foreground">Recomendado: 1200x800px (.jpg, .png ou .webp)</p>
+                <Input name="cover_caption" placeholder="Legenda da imagem de capa" className="text-xs" />
               </div>
 
               <div className="space-y-4 pt-4 border-t">
@@ -127,8 +128,8 @@ export default function NewProjectPage() {
                   <p className="text-xs text-muted-foreground">Você pode selecionar várias imagens de uma vez para a galeria.</p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs font-medium">Legendas das imagens</Label>
-                  <Textarea name="gallery_captions" placeholder="Uma legenda por linha, na mesma ordem das imagens selecionadas" rows={2} className="text-xs" />
+                  <Label className="text-xs font-medium">Legendas das imagens da galeria</Label>
+                  <Textarea name="gallery_captions" placeholder="Uma legenda por linha, na mesma ordem das imagens selecionadas (após a capa)" rows={2} className="text-xs" />
                 </div>
               </div>
 

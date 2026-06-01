@@ -131,6 +131,7 @@ export default async function EditProjectPage({ params }: { params: { id: string
                       <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-md border shadow-sm">
                         <img src={project.cover_image_url} alt="Capa atual" className="h-full w-full object-cover" />
                       </div>
+                      <input name="cover_caption" defaultValue={(project.gallery_captions as any)?.[0] || ''} placeholder="Legenda da capa" className="w-28 text-[11px] p-1 border rounded text-center" />
                       <label className="flex items-center gap-1 text-xs text-red-600 cursor-pointer hover:underline font-medium">
                         <input type="checkbox" name="delete_cover_image" value="true" className="accent-red-600 scale-110" />
                         Remover Capa
