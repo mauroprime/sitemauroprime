@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 
 interface ImageCarouselProps {
   images: string[]
+  captions?: string[]
   aspectRatio?: string
   className?: string
   showArrows?: boolean
@@ -16,6 +17,7 @@ interface ImageCarouselProps {
 
 export function ImageCarousel({ 
   images, 
+  captions,
   aspectRatio = "aspect-[4/3]",
   className,
   showArrows = true,
@@ -91,6 +93,16 @@ export function ImageCarousel({
             quality={95}
             priority={index === 0}
           />
+          {captions && captions[index] && (
+            <>
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+              <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-6">
+                <span className="text-white text-lg md:text-2xl font-bold text-center drop-shadow-lg">
+                  {captions[index]}
+                </span>
+              </div>
+            </>
+          )}
         </motion.div>
       </AnimatePresence>
 

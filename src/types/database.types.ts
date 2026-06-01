@@ -22,6 +22,7 @@ export interface ProjectRow {
   promotional_price: number | null
   cover_image_url: string | null
   gallery_images: Json
+  gallery_captions: Json
   attributes_json: Json
   display_order: number
   gallery_click_action: 'page' | 'photo'

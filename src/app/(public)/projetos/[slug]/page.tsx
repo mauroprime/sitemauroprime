@@ -47,6 +47,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
   
   const attr = (project.attributes_json as any) || {}
   const projectImages = ([project.cover_image_url, ...(project.gallery_images as string[] || [])].filter((img): img is string => !!img))
+  const galleryCaptions = (project.gallery_captions as string[]) || undefined
 
   const attributeList = [
     { key: 'bedrooms', icon: <Bed className="w-5 h-5" />, label: 'Quartos', value: attr.bedrooms ? `${attr.bedrooms} Quartos` : null },
@@ -68,6 +69,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
       <section className="relative w-full h-[60vh] md:h-[75vh] bg-zinc-950 overflow-hidden">
         <ImageCarousel 
           images={projectImages} 
+          captions={galleryCaptions}
           aspectRatio="h-full w-full"
           className="h-full w-full"
           objectFit="contain"
