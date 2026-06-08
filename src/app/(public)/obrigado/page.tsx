@@ -14,6 +14,7 @@ interface ObrigadoParams {
   projeto?: string
   event_id?: string
   name?: string
+  email?: string
   phone?: string
   intent?: string
   has_land?: string
@@ -31,7 +32,7 @@ function ObrigadoContent({ params }: { params: ObrigadoParams }) {
 }
 
 async function ObrigadoData({ params }: { params: ObrigadoParams }) {
-  const { projeto, event_id, name, phone, intent, has_land, project_type, investment, timeframe } = params
+  const { projeto, event_id, name, email, phone, intent, has_land, project_type, investment, timeframe } = params
   const project = projeto ? await getProjectBySlug(projeto) : null
   const settings = await getSiteSettings()
 
@@ -72,6 +73,13 @@ Poderia me orientar com os próximos passos?`
           price: Number(project.promotional_price || project.price)
         } : null} 
         eventId={event_id}
+        email={email}
+        name={name}
+        phone={phone}
+        intent={intent}
+        project_type={project_type}
+        investment={investment}
+        timeframe={timeframe}
       />
 
       {/* Background Decor */}
