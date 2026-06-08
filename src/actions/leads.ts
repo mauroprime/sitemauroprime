@@ -91,18 +91,15 @@ export async function submitLead(formData: FormData) {
       if (proj) projectDetails = proj
     }
 
-    // Envia notificação via WhatsApp (Evolution API)
+    // Envia mensagem de boas-vindas para o lead via WhatsApp (Evolution API)
     sendLeadToWhatsApp({
       name,
-      email,
       phone,
       intent,
       project_type,
       investment_range,
       timeframe,
       has_land,
-      message,
-      related_project: projectDetails?.title || null,
     })
 
     // DISPARO DA API DE CONVERSÕES (CAPI)
