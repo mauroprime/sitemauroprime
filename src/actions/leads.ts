@@ -5,6 +5,7 @@ import { cookies, headers } from 'next/headers'
 import { Database } from '../types/database.types'
 import { revalidatePath } from 'next/cache'
 import { sendFBCapiEvent, prepareUserData } from '../lib/facebook-capi'
+import { sendLeadToWhatsApp } from '../lib/evolution-api'
 
 /**
  * Função auxiliar para criar um cliente Supabase com a chave de serviço (Service Role),
@@ -89,6 +90,20 @@ export async function submitLead(formData: FormData) {
       const { data: proj } = await supabase.from('projects').select('title, category, price, promotional_price').eq('id', related_project_id).single()
       if (proj) projectDetails = proj
     }
+
+    // Envia notificação via WhatsApp (Evolution API)
+    sendLeadToWhatsApp({
+      name,
+      email,
+      phone,
+      intent,
+      project_type,
+      investment_range,
+      timeframe,
+      has_land,
+      message,
+      related_project: projectDetails?.title || null,
+    })
 
     // DISPARO DA API DE CONVERSÕES (CAPI)
     try {
