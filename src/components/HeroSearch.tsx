@@ -58,6 +58,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   
   // Lead Form State
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [hasLand, setHasLand] = useState<boolean | null>(null)
   const [timeframe, setTimeframe] = useState('')
@@ -101,6 +102,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
     const formData = new FormData()
     formData.append('name', name)
+    formData.append('email', email)
     formData.append('phone', whatsapp)
     formData.append('intent', intent || '')
     formData.append('has_land', hasLand ? 'true' : 'false')
@@ -134,6 +136,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           if (projectSlug) params.append('projeto', projectSlug)
           if (eventId) params.append('event_id', eventId)
           params.append('name', name)
+          params.append('email', email)
           params.append('phone', whatsapp)
           params.append('intent', intent || '')
           params.append('has_land', hasLand ? 'true' : 'false')
@@ -310,6 +313,19 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Ex: João Silva"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-gold transition-all"
+                        disabled={isPending}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Email</label>
+                      <input 
+                        required
+                        type="email" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Ex: joao@email.com"
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-gold transition-all"
                         disabled={isPending}
                       />

@@ -39,6 +39,7 @@ function ContactFormContent({ projectSlug, projectId, projectPrice }: ContactFor
 
   // Lead Form State
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [intent, setIntent] = useState<'Construir' | 'Investir' | null>(null)
   const [hasLand, setHasLand] = useState<boolean | null>(null)
@@ -87,6 +88,7 @@ function ContactFormContent({ projectSlug, projectId, projectPrice }: ContactFor
 
     const formData = new FormData()
     formData.append('name', name)
+    formData.append('email', email)
     formData.append('phone', whatsapp)
     formData.append('intent', intent || '')
     formData.append('has_land', hasLand ? 'true' : 'false')
@@ -116,6 +118,7 @@ function ContactFormContent({ projectSlug, projectId, projectPrice }: ContactFor
         if (projectSlug) params.append('projeto', projectSlug)
         if (eventId) params.append('event_id', eventId)
         params.append('name', name)
+        params.append('email', email)
         params.append('phone', whatsapp)
         params.append('intent', intent || '')
         params.append('has_land', hasLand ? 'true' : 'false')
@@ -241,6 +244,20 @@ function ContactFormContent({ projectSlug, projectId, projectPrice }: ContactFor
           required 
           disabled={isPending} 
           placeholder="Ex: João Silva"
+          className="bg-brand-black border-white/10 text-white focus-visible:ring-brand-gold/50 rounded-xl h-14" 
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold ml-1">Email</Label>
+        <Input 
+          id="email" 
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required 
+          disabled={isPending} 
+          placeholder="Ex: joao@email.com"
           className="bg-brand-black border-white/10 text-white focus-visible:ring-brand-gold/50 rounded-xl h-14" 
         />
       </div>
