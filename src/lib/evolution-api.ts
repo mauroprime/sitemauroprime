@@ -25,7 +25,11 @@ export async function sendLeadToWhatsApp(lead: {
 
   const hasLand = lead.has_land ? 'Sim' : 'Não'
 
-  const text = `Olá ${lead.name}, tudo bem? Aqui é o Mauro Consultor da Construtora Prime. Recebi seu contato aqui!
+  const text = `Olá, ${lead.name}! Tudo bem?
+
+Aqui é o Mauro, consultor da Construtora Prime. Recebi seu contato e já separei algumas informações para dar andamento no seu atendimento.
+
+Poderia, por gentileza, confirmar se os dados abaixo estão corretos?
 
 Nome: ${lead.name}
 Telefone: ${lead.phone}
@@ -33,7 +37,9 @@ Possui terreno: ${hasLand}
 Faixa de investimento: ${lead.investment_range || '—'}
 Prazo estimado: ${lead.timeframe || '—'}
 
-Para agilizar seu atendimento você confirma essas respostas?`
+Assim consigo agilizar seu atendimento e já te apresentar as melhores opções para o seu perfil.
+
+Fico no aguardo da sua confirmação!`
 
   try {
     const res = await fetch(`${EVO_BASE}/message/sendText/${EVO_INSTANCE}`, {
