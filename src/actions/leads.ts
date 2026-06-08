@@ -92,7 +92,7 @@ export async function submitLead(formData: FormData) {
     }
 
     // Envia mensagem de boas-vindas para o lead via WhatsApp (Evolution API)
-    sendLeadToWhatsApp({
+    await sendLeadToWhatsApp({
       name,
       phone,
       intent,
@@ -100,7 +100,7 @@ export async function submitLead(formData: FormData) {
       investment_range,
       timeframe,
       has_land,
-    })
+    }).catch((err) => console.error('[Evolution API] sendLeadToWhatsApp error:', err))
 
     // DISPARO DA API DE CONVERSÕES (CAPI)
     try {
