@@ -44,8 +44,10 @@ async function hash(data: string) {
  * Envia um evento para a API de Conversões do Facebook
  */
 export async function sendFBCapiEvent(event: FBCapiEvent) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[Dev Mode] Evento CAPI Simulado: ${event.event_name}`, event)
+  if (process.env.NEXT_PUBLIC_FB_PIXEL_DISABLED === 'true') {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[Dev Mode] Evento CAPI Simulado: ${event.event_name}`, event)
+    }
     return
   }
 
