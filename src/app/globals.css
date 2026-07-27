@@ -189,8 +189,10 @@
 }
 
 /* Lenis Smooth Scroll styles */
-html.lenis, html.lenis body {
-  height: auto;
+@supports (height: 100dvh) {
+  html.lenis, html.lenis body {
+    height: auto;
+  }
 }
 
 .lenis.lenis-smooth {
@@ -207,4 +209,11 @@ html.lenis, html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* WebView fallback: sem backdrop-filter */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-fallback {
+    background: #111111 !important;
+  }
 }

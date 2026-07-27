@@ -19,9 +19,9 @@ export default async function PublicLayout({
   const email = settings?.contact_email || 'mauro@primegroupp.com.br'
 
   return (
-    <div className="bg-[#000] min-h-screen">
+    <div className="bg-[#000] min-h-dvh">
       <SmoothScroll />
-      <div className="max-w-[1920px] mx-auto w-full relative bg-brand-black min-h-screen shadow-2xl overflow-hidden">
+      <div className="max-w-[1920px] mx-auto w-full relative bg-brand-black min-h-dvh shadow-2xl overflow-hidden">
         <header className="fixed top-0 left-1/2 -translate-x-1/2 z-[60] w-full max-w-[1920px] backdrop-blur-md border-b border-white/5 bg-brand-black/95 shadow-lg">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-24">
