@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, Suspense } from 'react'
-import { Home as HomeIcon, ChevronLeft, CheckCircle2, ArrowRight, Search, X } from "lucide-react"
+import { ChevronLeft, CheckCircle2, ArrowRight, X } from "lucide-react"
 import { motion, AnimatePresence } from 'framer-motion'
 import { submitLead } from '@/actions/leads'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -41,11 +41,11 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   const [currentStep, setCurrentStep] = useState(1)
   const totalMainSteps = 4
 
-  // Form State - Main Steps
-  const [landStatus, setLandStatus] = useState('')
-  const [city, setCity] = useState('')
-  const [area, setArea] = useState('')
-  const [hasProject, setHasProject] = useState('')
+  // Form State - Main Steps (matching LumenCRM flow)
+  const [terreno, setTerreno] = useState('')
+  const [cidade, setCidade] = useState('')
+  const [metragem, setMetragem] = useState('')
+  const [projeto, setProjeto] = useState('')
 
   // Investment slider
   const [investment, setInvestment] = useState(initialVal)
@@ -54,8 +54,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
-  const [financing, setFinancing] = useState('')
-  const [timeframe, setTimeframe] = useState('')
+  const [recurso, setRecurso] = useState('')
+  const [prazo, setPrazo] = useState('')
 
   // Modal State
   const [isOpen, setIsOpen] = useState(false)
@@ -94,7 +94,6 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     if (currentStep < totalMainSteps) {
       setCurrentStep(currentStep + 1)
     } else if (currentStep === totalMainSteps) {
-      // Abre o modal
       setIsOpen(true)
       firePixelEvent('InitiateCheckout', {
         content_name: projectSlug ? `Análise: ${projectSlug}` : 'Procura Geral',
@@ -112,10 +111,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   const canProceed = () => {
     switch (currentStep) {
-      case 1: return landStatus !== ''
-      case 2: return city.trim().length > 0
-      case 3: return area.trim().length > 0
-      case 4: return hasProject !== ''
+      case 1: return terreno !== ''
+      case 2: return cidade !== ''
+      case 3: return metragem.trim().length > 0
+      case 4: return projeto !== ''
       default: return false
     }
   }
@@ -130,14 +129,19 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     formData.append('email', email)
     formData.append('phone', whatsapp)
     formData.append('intent', 'Construir')
-    formData.append('has_land', landStatus === 'Já possuo o terreno' ? 'true' : 'false')
+    formData.append('has_land', terreno === 'sim' ? 'true' : 'false')
     formData.append('project_type', 'Personalizado')
     formData.append('investment_range', `R$ ${investment}k`)
-    formData.append('timeframe', timeframe)
-    formData.append('city', city)
-    formData.append('area', area)
-    formData.append('has_project', hasProject)
-    formData.append('financing', financing)
+    formData.append('timeframe', prazo)
+    formData.append('city', cidade)
+    formData.append('area', metragem)
+    formData.append('has_project', projeto)
+    formData.append('financing', recurso)
+    formData.append('terreno', terreno)
+    formData.append('bairro', '')
+    formData.append('projeto', projeto)
+    formData.append('recurso', recurso)
+    formData.append('prazo', prazo)
     if (projectId) {
       formData.append('related_project_id', projectId)
     }
@@ -166,15 +170,15 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           params.append('name', name)
           params.append('email', email)
           params.append('phone', whatsapp)
-          params.append('intent', 'Construir')
-          params.append('has_land', landStatus === 'Já possuo o terreno' ? 'true' : 'false')
-          params.append('project_type', 'Personalizado')
+          params.append('terreno', terreno)
+          params.append('cidade', cidade)
+          params.append('metragem', metragem)
+          params.append('projeto_resp', projeto)
+          params.append('recurso', recurso)
+          params.append('prazo', prazo)
           
           const labelUpper = projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)
           params.append('investment', `R$ ${investment}k a ${labelUpper}`)
-          params.append('timeframe', timeframe)
-          params.append('city', city)
-          params.append('area', area)
 
           const redirectUrl = `/obrigado?${params.toString()}`
           router.push(redirectUrl)
@@ -189,14 +193,19 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     }
   }
 
-  // Auto-advance for select/toggle buttons
-  const handleLandSelect = (value: string) => {
-    setLandStatus(value)
+  // Auto-advance for select buttons
+  const handleTerrenoSelect = (value: string) => {
+    setTerreno(value)
     setTimeout(() => goNext(), 300)
   }
 
-  const handleProjectSelect = (value: string) => {
-    setHasProject(value)
+  const handleCidadeSelect = (value: string) => {
+    setCidade(value)
+    setTimeout(() => goNext(), 300)
+  }
+
+  const handleProjetoSelect = (value: string) => {
+    setProjeto(value)
     setTimeout(() => goNext(), 300)
   }
 
@@ -245,25 +254,29 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 Passo 1 de {totalMainSteps}
               </p>
               <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
-                Você já possui o terreno ou está em processo de compra?
+                Você já possui o terreno para fazer a construção?
               </h3>
             </div>
             <div className="space-y-2">
-              {['Já possuo o terreno', 'Estou em processo de compra', 'Ainda não tenho terreno'].map((option) => (
+              {[
+                { label: 'Já tenho terreno!', value: 'sim' },
+                { label: 'Processo de compra.', value: 'processo' },
+                { label: 'Ainda não tenho.', value: 'nao' }
+              ].map((option) => (
                 <button
-                  key={option}
+                  key={option.value}
                   type="button"
-                  onClick={() => handleLandSelect(option)}
+                  onClick={() => handleTerrenoSelect(option.value)}
                   className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
-                    landStatus === option
+                    terreno === option.value
                       ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
                       : isLight
                       ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                       : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
                   }`}
                 >
-                  <span>{option}</span>
-                  {landStatus === option && <CheckCircle2 size={18} />}
+                  <span>{option.label}</span>
+                  {terreno === option.value && <CheckCircle2 size={18} />}
                 </button>
               ))}
             </div>
@@ -281,31 +294,29 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 Em qual cidade será a construção?
               </h3>
             </div>
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="Ex: Curitiba, São Paulo..."
-              autoFocus
-              className={`w-full border-2 rounded-xl px-4 py-4 text-lg focus:outline-none transition-all ${
-                isLight
-                  ? 'bg-white border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-brand-gold'
-                  : 'bg-white/5 border-white/10 text-white placeholder-zinc-600 focus:border-brand-gold'
-              }`}
-            />
-            <button
-              type="button"
-              onClick={goNext}
-              disabled={!canProceed()}
-              className={`w-full py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 ${
-                canProceed()
-                  ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)]'
-                  : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'
-              }`}
-            >
-              <span>Próximo</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="space-y-2">
+              {[
+                { label: 'Curitiba - PR', value: 'curitiba' },
+                { label: 'Região metropolitana', value: 'regiao' },
+                { label: 'Fora de Curitiba', value: 'fora' }
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleCidadeSelect(option.value)}
+                  className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
+                    cidade === option.value
+                      ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
+                      : isLight
+                      ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                      : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
+                  }`}
+                >
+                  <span>{option.label}</span>
+                  {cidade === option.value && <CheckCircle2 size={18} />}
+                </button>
+              ))}
+            </div>
           </div>
         )
 
@@ -323,10 +334,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
             <div className="relative">
               <input
                 type="text"
-                value={area}
+                value={metragem}
                 onChange={(e) => {
                   const onlyNums = e.target.value.replace(/\D/g, '')
-                  setArea(onlyNums)
+                  setMetragem(onlyNums)
                 }}
                 placeholder="Ex: 150"
                 autoFocus
@@ -364,25 +375,29 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 Passo 4 de {totalMainSteps}
               </p>
               <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
-                Já possui algum projeto ou croqui?
+                Você já possui algum projeto ou croqui?
               </h3>
             </div>
             <div className="space-y-2">
-              {['Já tenho projeto aprovado', 'Tenho um croqui/rascunho', 'Ainda estou em fase de ideias'].map((option) => (
+              {[
+                { label: 'Já tenho um projeto.', value: 'jatem' },
+                { label: 'Finalizando projeto.', value: 'finalizando' },
+                { label: 'Ainda não tenho.', value: 'naotem' }
+              ].map((option) => (
                 <button
-                  key={option}
+                  key={option.value}
                   type="button"
-                  onClick={() => handleProjectSelect(option)}
+                  onClick={() => handleProjetoSelect(option.value)}
                   className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
-                    hasProject === option
+                    projeto === option.value
                       ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
                       : isLight
                       ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                       : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
                   }`}
                 >
-                  <span>{option}</span>
-                  {hasProject === option && <CheckCircle2 size={18} />}
+                  <span>{option.label}</span>
+                  {projeto === option.value && <CheckCircle2 size={18} />}
                 </button>
               ))}
             </div>
@@ -501,44 +516,57 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
                     <div className="h-px bg-white/5"></div>
 
-                    {/* Financiamento */}
+                    {/* Financiamento - Matching LumenCRM b20 */}
                     <div className="space-y-2">
                       <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Recursos próprios ou financiamento?</label>
-                      <select
-                        required
-                        value={financing}
-                        onChange={(e) => setFinancing(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white appearance-none focus:outline-none focus:border-brand-gold transition-all cursor-pointer"
-                        disabled={isPending}
-                      >
-                        <option value="" className="bg-brand-dark text-white">Selecione</option>
-                        <option value="Recursos próprios" className="bg-brand-dark text-white">Recursos próprios</option>
-                        <option value="Financiamento bancário" className="bg-brand-dark text-white">Financiamento bancário</option>
-                        <option value="Misto (entrada + financiamento)" className="bg-brand-dark text-white">Misto (entrada + financiamento)</option>
-                        <option value="Ainda não defini" className="bg-brand-dark text-white">Ainda não defini</option>
-                      </select>
+                      <div className="space-y-2">
+                        {[
+                          { label: 'Recursos próprios', value: 'recursoProprio' },
+                          { label: 'Financiamento', value: 'financiamento' },
+                          { label: 'Os dois', value: 'recursoeFinanciamento' }
+                        ].map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setRecurso(option.value)}
+                            className={`w-full flex items-center justify-between py-4 px-4 rounded-xl text-sm font-bold transition-all border-2 ${
+                              recurso === option.value
+                                ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
+                                : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
+                            }`}
+                          >
+                            <span>{option.label}</span>
+                            {recurso === option.value && <CheckCircle2 size={18} />}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
-                    {/* Prazo */}
+                    {/* Prazo - Matching LumenCRM b24 */}
                     <div className="space-y-2">
-                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Pretende iniciar a obra em qual prazo?</label>
-                      <select
-                        required
-                        value={timeframe}
-                        onChange={(e) => setTimeframe(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white appearance-none focus:outline-none focus:border-brand-gold transition-all cursor-pointer"
-                        disabled={isPending}
-                      >
-                        <option value="" className="bg-brand-dark text-white">Selecione o prazo</option>
-                        <option value="Preciso com urgência" className="bg-brand-dark text-white">Preciso com urgência</option>
-                        <option value="Pretendo iniciar em 30 dias" className="bg-brand-dark text-white">Pretendo iniciar em 30 dias</option>
-                        <option value="Pretendo iniciar em 90 dias" className="bg-brand-dark text-white">Pretendo iniciar em 90 dias</option>
-                        <option value="Pretendo iniciar daqui 6 meses" className="bg-brand-dark text-white">Pretendo iniciar daqui 6 meses</option>
-                        <option value="Pretendo iniciar daqui 1 ano" className="bg-brand-dark text-white">Pretendo iniciar daqui 1 ano</option>
-                        <option value="Pretendo iniciar daqui 2 anos" className="bg-brand-dark text-white">Pretendo iniciar daqui 2 anos</option>
-                        <option value="Somente 2 anos +" className="bg-brand-dark text-white">Somente 2 anos +</option>
-                        <option value="Estou só avaliando as possibilidades" className="bg-brand-dark text-white">Estou só avaliando as possibilidades</option>
-                      </select>
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Pretende iniciar essa obra em qual prazo?</label>
+                      <div className="space-y-2">
+                        {[
+                          { label: 'Imediatamente', value: 'imediatamente' },
+                          { label: '30 dias', value: '30dias' },
+                          { label: '90 dias', value: '90dias' },
+                          { label: '+ de 6 meses', value: '+6meses' }
+                        ].map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setPrazo(option.value)}
+                            className={`w-full flex items-center justify-between py-4 px-4 rounded-xl text-sm font-bold transition-all border-2 ${
+                              prazo === option.value
+                                ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
+                                : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
+                            }`}
+                          >
+                            <span>{option.label}</span>
+                            {prazo === option.value && <CheckCircle2 size={18} />}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     <div className="h-px bg-white/5"></div>
@@ -585,8 +613,12 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
                     <button 
                       type="submit"
-                      disabled={isPending}
-                      className="w-full bg-brand-gold hover:bg-brand-goldlight text-black py-5 rounded-xl text-sm font-black uppercase tracking-[0.1em] transition-all relative overflow-hidden group shadow-xl"
+                      disabled={isPending || recurso === '' || prazo === ''}
+                      className={`w-full py-5 rounded-xl text-sm font-black uppercase tracking-[0.1em] transition-all relative overflow-hidden group shadow-xl ${
+                        recurso !== '' && prazo !== '' && !isPending
+                          ? 'bg-brand-gold hover:bg-brand-goldlight text-black'
+                          : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'
+                      }`}
                     >
                       {isPending ? (
                         <div className="flex items-center justify-center gap-2">
