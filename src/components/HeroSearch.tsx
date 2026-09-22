@@ -208,8 +208,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           params.append('recurso', recurso)
           params.append('prazo', prazo)
           
-          const labelUpper = projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)
-          params.append('investment', `R$ ${investment}k a ${labelUpper}`)
+          const labelUpper = projectPrice ? `R$ ${investment + rangePlus}k` : (investment >= 1000 ? `R$ ${((investment + rangePlus) / 1000).toFixed((investment + rangePlus) % 1000 === 0 ? 0 : 1)}M` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`))
+          params.append('investment', investment >= 1000 ? `R$ ${(investment / 1000).toFixed(investment % 1000 === 0 ? 0 : 1)}M a ${labelUpper}` : `R$ ${investment}k a ${labelUpper}`)
 
           const redirectUrl = `/obrigado?${params.toString()}`
           router.push(redirectUrl)
@@ -660,7 +660,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                       <div className="flex justify-between text-xs text-zinc-500 uppercase font-black tracking-widest px-1">
                         <span>Seu orçamento</span>
                         <span className="text-brand-gold">
-                          {investment === 0 ? 'Mova para definir' : `R$ ${investment}k - ${projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}`}
+                          {investment === 0 ? 'Mova para definir' : investment >= 1000 ? `R$ ${(investment / 1000).toFixed(investment % 1000 === 0 ? 0 : 1)}M - R$ ${((investment + rangePlus) / 1000).toFixed((investment + rangePlus) % 1000 === 0 ? 0 : 1)}M` : `R$ ${investment}k - ${projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}`}
                         </span>
                       </div>
                       <input
@@ -670,8 +670,9 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                         step={stepVal}
                         value={investment}
                         onChange={(e) => {
-                          setInvestment(parseInt(e.target.value))
-                          setSliderMoved(true)
+                          const val = parseInt(e.target.value)
+                          setInvestment(val)
+                          setSliderMoved(val > 0)
                         }}
                         className="w-full cursor-pointer text-white/10"
                       />
