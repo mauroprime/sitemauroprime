@@ -37,9 +37,9 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     initialVal = Math.floor(priceK / 5) * 5
   }
 
-  // Step state (main form only: steps 1-4)
+  // Step state (main form: steps 1-6)
   const [currentStep, setCurrentStep] = useState(1)
-  const totalMainSteps = 4
+  const totalMainSteps = 6
 
   // Form State - Main Steps (matching LumenCRM flow)
   const [terreno, setTerreno] = useState('')
@@ -115,6 +115,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
       case 2: return cidade !== ''
       case 3: return metragem.trim().length > 0
       case 4: return projeto !== ''
+      case 5: return recurso !== ''
+      case 6: return prazo !== ''
       default: return false
     }
   }
@@ -206,6 +208,16 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   const handleProjetoSelect = (value: string) => {
     setProjeto(value)
+    setTimeout(() => goNext(), 300)
+  }
+
+  const handleRecursoSelect = (value: string) => {
+    setRecurso(value)
+    setTimeout(() => goNext(), 300)
+  }
+
+  const handlePrazoSelect = (value: string) => {
+    setPrazo(value)
     setTimeout(() => goNext(), 300)
   }
 
@@ -404,6 +416,81 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           </div>
         )
 
+      case 5:
+        return (
+          <div className="space-y-4">
+            <div className="text-center">
+              <p className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-600' : 'text-zinc-500'} mb-1`}>
+                Passo 5 de {totalMainSteps}
+              </p>
+              <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
+                Recursos próprios ou financiamento?
+              </h3>
+            </div>
+            <div className="space-y-2">
+              {[
+                { label: 'Recursos próprios', value: 'recursoProprio' },
+                { label: 'Financiamento', value: 'financiamento' },
+                { label: 'Os dois', value: 'recursoeFinanciamento' }
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleRecursoSelect(option.value)}
+                  className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
+                    recurso === option.value
+                      ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
+                      : isLight
+                      ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                      : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
+                  }`}
+                >
+                  <span>{option.label}</span>
+                  {recurso === option.value && <CheckCircle2 size={18} />}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 6:
+        return (
+          <div className="space-y-4">
+            <div className="text-center">
+              <p className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isLight ? 'text-zinc-600' : 'text-zinc-500'} mb-1`}>
+                Passo 6 de {totalMainSteps}
+              </p>
+              <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
+                Pretende iniciar essa obra em qual prazo?
+              </h3>
+            </div>
+            <div className="space-y-2">
+              {[
+                { label: 'Imediatamente', value: 'imediatamente' },
+                { label: '30 dias', value: '30dias' },
+                { label: '90 dias', value: '90dias' },
+                { label: '+ de 6 meses', value: '+6meses' }
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handlePrazoSelect(option.value)}
+                  className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
+                    prazo === option.value
+                      ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
+                      : isLight
+                      ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                      : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
+                  }`}
+                >
+                  <span>{option.label}</span>
+                  {prazo === option.value && <CheckCircle2 size={18} />}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+
       default:
         return null
     }
@@ -516,61 +603,6 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
                     <div className="h-px bg-white/5"></div>
 
-                    {/* Financiamento - Matching LumenCRM b20 */}
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Recursos próprios ou financiamento?</label>
-                      <div className="space-y-2">
-                        {[
-                          { label: 'Recursos próprios', value: 'recursoProprio' },
-                          { label: 'Financiamento', value: 'financiamento' },
-                          { label: 'Os dois', value: 'recursoeFinanciamento' }
-                        ].map((option) => (
-                          <button
-                            key={option.value}
-                            type="button"
-                            onClick={() => setRecurso(option.value)}
-                            className={`w-full flex items-center justify-between py-4 px-4 rounded-xl text-sm font-bold transition-all border-2 ${
-                              recurso === option.value
-                                ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
-                                : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
-                            }`}
-                          >
-                            <span>{option.label}</span>
-                            {recurso === option.value && <CheckCircle2 size={18} />}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Prazo - Matching LumenCRM b24 */}
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Pretende iniciar essa obra em qual prazo?</label>
-                      <div className="space-y-2">
-                        {[
-                          { label: 'Imediatamente', value: 'imediatamente' },
-                          { label: '30 dias', value: '30dias' },
-                          { label: '90 dias', value: '90dias' },
-                          { label: '+ de 6 meses', value: '+6meses' }
-                        ].map((option) => (
-                          <button
-                            key={option.value}
-                            type="button"
-                            onClick={() => setPrazo(option.value)}
-                            className={`w-full flex items-center justify-between py-4 px-4 rounded-xl text-sm font-bold transition-all border-2 ${
-                              prazo === option.value
-                                ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
-                                : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
-                            }`}
-                          >
-                            <span>{option.label}</span>
-                            {prazo === option.value && <CheckCircle2 size={18} />}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="h-px bg-white/5"></div>
-
                     {/* Dados pessoais */}
                     <div className="space-y-2">
                       <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Nome e Sobrenome</label>
@@ -613,9 +645,9 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
                     <button 
                       type="submit"
-                      disabled={isPending || recurso === '' || prazo === ''}
+                      disabled={isPending}
                       className={`w-full py-5 rounded-xl text-sm font-black uppercase tracking-[0.1em] transition-all relative overflow-hidden group shadow-xl ${
-                        recurso !== '' && prazo !== '' && !isPending
+                        !isPending
                           ? 'bg-brand-gold hover:bg-brand-goldlight text-black'
                           : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'
                       }`}
