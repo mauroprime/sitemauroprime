@@ -51,10 +51,11 @@ export default async function Home() {
               <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 bg-brand-gold/10 px-4 py-2 rounded-full border border-brand-gold/20 backdrop-blur-sm self-center lg:self-start">
                 Orientação e Clareza Técnica
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-white font-medium tracking-tight mb-8 leading-[1.1]">
-                O projeto certo para o seu momento,{' '}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-white font-medium tracking-tight mb-8 leading-[1.15]">
+                O projeto certo<br />
+                para o seu momento,{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-brand-goldlight">
-                  com clareza e segurança absoluta.
+                  com clareza e<br />segurança absoluta.
                 </span>
               </h1>
               <p className="text-lg md:text-xl text-zinc-300 font-light max-w-2xl leading-relaxed">
