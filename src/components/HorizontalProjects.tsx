@@ -3,12 +3,8 @@
 import React, { useRef, useEffect } from 'react'
 import { ArrowRight, ChevronRight } from "lucide-react"
 import { ProjectCard } from './ProjectCard'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import { ProjectWithPromotions } from '@/services/public'
-
-gsap.registerPlugin(ScrollTrigger)
 
 interface HorizontalProjectsProps {
   projects: ProjectWithPromotions[]
@@ -25,38 +21,47 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
     const wrapper = wrapperRef.current
     if (!section || !scrollContainer || !wrapper) return
 
-    const ctx = gsap.context(() => {
-      // Calcula a distância total de scroll horizontal
-      const getScrollDistance = () => {
-        return scrollContainer.scrollWidth - scrollContainer.clientWidth
-      }
+    let cleanup: (() => void) | undefined
 
-      // Cria a animação de scroll horizontal
-      const tween = gsap.to(scrollContainer, {
-        scrollLeft: () => getScrollDistance(),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: () => `+=${getScrollDistance()}`,
-          pin: wrapper,
-          scrub: 1,
-          invalidateOnRefresh: true,
+    const initGSAP = async () => {
+      const gsapModule = await import('gsap')
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger')
+      const gsap = gsapModule.default || gsapModule.gsap
+      gsap.registerPlugin(ScrollTrigger)
+
+      const ctx = gsap.context(() => {
+        const getScrollDistance = () => {
+          return scrollContainer.scrollWidth - scrollContainer.clientWidth
         }
-      })
 
-      // Refresh no resize
-      const handleResize = () => {
-        ScrollTrigger.refresh()
-      }
+        gsap.to(scrollContainer, {
+          scrollLeft: () => getScrollDistance(),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end: () => `+=${getScrollDistance()}`,
+            pin: wrapper,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          }
+        })
+      }, section)
+
+      const handleResize = () => ScrollTrigger.refresh()
       window.addEventListener('resize', handleResize)
 
-      return () => {
+      cleanup = () => {
         window.removeEventListener('resize', handleResize)
+        ctx.revert()
       }
-    }, section)
+    }
 
-    return () => ctx.revert()
+    initGSAP()
+
+    return () => {
+      if (cleanup) cleanup()
+    }
   }, [projects])
 
   if (!projects || projects.length === 0) return null
