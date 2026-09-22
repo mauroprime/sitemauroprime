@@ -72,6 +72,18 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     }
   }, [projectPrice])
 
+  // Bloqueia scroll do body quando o modal abre
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
   // WhatsApp Mask: (00) 00000-0000
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '')
