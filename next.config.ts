@@ -22,6 +22,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '20mb',
     },
   },
+  transpilePackages: ['gsap'],
 };
 
 export default nextConfig;
