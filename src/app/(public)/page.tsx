@@ -1,5 +1,4 @@
 import { getPublishedProjects, getSiteSettings, getTestimonials } from "@/services/public";
-import { ContactForm } from "@/components/ContactForm";
 import Image from "next/image";
 import { Bed, BedDouble, CheckCircle2, HelpCircle, Shield, User, ChevronRight, Hammer, Star } from "lucide-react";
 import { HorizontalProjects } from "@/components/HorizontalProjects";
