@@ -44,22 +44,29 @@ export default async function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-brand-black/90 via-brand-black/70 to-brand-black"></div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full flex flex-col items-center text-center mt-12">
-          <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 bg-brand-gold/10 px-4 py-2 rounded-full border border-brand-gold/20 backdrop-blur-sm">
-            Orientação e Clareza Técnica
-          </span>
-          <h1 className="text-4xl md:text-7xl font-serif text-white font-medium tracking-tight mb-8 leading-[1.1]">
-            O projeto certo para o seu momento, <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-brand-goldlight">
-              com clareza e segurança absoluta.
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl text-zinc-300 font-light max-w-3xl mb-14 leading-relaxed">
-            Seja para a primeira casa, um upgrade de padrão ou investimento, eu ajudo você a entender o que faz sentido para o seu terreno, seu bolso e sua família.
-          </p>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full mt-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* LEFT: Textos e Titulos */}
+            <div className="flex flex-col text-center lg:text-left">
+              <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 bg-brand-gold/10 px-4 py-2 rounded-full border border-brand-gold/20 backdrop-blur-sm self-center lg:self-start">
+                Orientação e Clareza Técnica
+              </span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-white font-medium tracking-tight mb-8 leading-[1.1]">
+                O projeto certo para o seu momento,{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-brand-goldlight">
+                  com clareza e segurança absoluta.
+                </span>
+              </h1>
+              <p className="text-lg md:text-xl text-zinc-300 font-light max-w-2xl leading-relaxed">
+                Seja para a primeira casa, um upgrade de padrão ou investimento, eu ajudo você a entender o que faz sentido para o seu terreno, seu bolso e sua família.
+              </p>
+            </div>
 
-          {/* Advanced Search Bar / Selector */}
-          <HeroSearch />
+            {/* RIGHT: Formulario Step */}
+            <div className="w-full">
+              <HeroSearch />
+            </div>
+          </div>
         </div>
       </section>
 
