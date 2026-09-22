@@ -23,18 +23,18 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   const router = useRouter()
 
   // Orçamento dinâmico baseado no preço do projeto
-  let minVal = 200
+  let minVal = 0
   let maxVal = 2000
   let stepVal = 50
-  let initialVal = 500
+  let initialVal = 0
   const rangePlus = projectPrice ? (projectPrice < 200000 ? 50 : 100) : 500
 
   if (projectPrice) {
     const priceK = projectPrice / 1000
-    minVal = Math.max(30, Math.floor((priceK * 0.7) / 5) * 5)
+    minVal = 0
     maxVal = Math.max(100, Math.ceil((priceK * 1.5) / 5) * 5)
     stepVal = 5
-    initialVal = Math.floor(priceK / 5) * 5
+    initialVal = 0
   }
 
   // Step state (main form: steps 1-6)
@@ -49,6 +49,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   // Investment slider
   const [investment, setInvestment] = useState(initialVal)
+  const [sliderMoved, setSliderMoved] = useState(false)
 
   // Form State - Modal
   const [name, setName] = useState('')
@@ -68,7 +69,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   useEffect(() => {
     if (projectPrice) {
       const priceK = projectPrice / 1000
-      setInvestment(Math.floor(priceK / 5) * 5)
+      setInvestment(0)
+      setSliderMoved(false)
     }
   }, [projectPrice])
 
@@ -599,7 +601,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                       <div className="flex justify-between text-xs text-zinc-500 uppercase font-black tracking-widest px-1">
                         <span>Seu orçamento</span>
                         <span className="text-brand-gold">
-                          R$ {investment}k - {projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}
+                          {investment === 0 ? 'Mova para definir' : `R$ ${investment}k - ${projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}`}
                         </span>
                       </div>
                       <input
@@ -608,7 +610,10 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                         max={maxVal}
                         step={stepVal}
                         value={investment}
-                        onChange={(e) => setInvestment(parseInt(e.target.value))}
+                        onChange={(e) => {
+                          setInvestment(parseInt(e.target.value))
+                          setSliderMoved(true)
+                        }}
                         className="w-full cursor-pointer text-white/10"
                       />
                     </div>
@@ -657,9 +662,9 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
                     <button 
                       type="submit"
-                      disabled={isPending}
+                      disabled={isPending || !sliderMoved}
                       className={`w-full py-5 rounded-xl text-sm font-black uppercase tracking-[0.1em] transition-all relative overflow-hidden group shadow-xl ${
-                        !isPending
+                        sliderMoved && !isPending
                           ? 'bg-brand-gold hover:bg-brand-goldlight text-black'
                           : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'
                       }`}
