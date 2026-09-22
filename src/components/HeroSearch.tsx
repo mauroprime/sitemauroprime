@@ -64,6 +64,8 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [direction, setDirection] = useState(1)
+  const [disqualified, setDisqualified] = useState(false)
+  const [disqualifyMessage, setDisqualifyMessage] = useState('')
 
   // Ajusta o valor padrão do investimento se o preço do projeto carregar
   useEffect(() => {
@@ -212,11 +214,25 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   // Auto-advance for select buttons
   const handleTerrenoSelect = (value: string) => {
     setTerreno(value)
+    if (value === 'nao') {
+      setTimeout(() => {
+        setDisqualified(true)
+        setDisqualifyMessage('No momento, nosso atendimento é focado em quem já possui ou está em processo de aquisição de terreno. Quando tiver o terreno definido, volte e faremos uma análise personalizada para você!')
+      }, 300)
+      return
+    }
     setTimeout(() => goNext(), 300)
   }
 
   const handleCidadeSelect = (value: string) => {
     setCidade(value)
+    if (value === 'fora') {
+      setTimeout(() => {
+        setDisqualified(true)
+        setDisqualifyMessage('Infelizmente nosso atendimento consultivo é focado na região de Curitiba e região metropolitana no momento. Para projetos em outras regiões, recomendamos buscar um consultor local especializado.')
+      }, 300)
+      return
+    }
     setTimeout(() => goNext(), 300)
   }
 
@@ -512,7 +528,36 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   return (
     <>
-      {/* Main Form Container - Step by Step (1-4) */}
+      {/* Tela de Desqualificação */}
+      {disqualified ? (
+        <div className={`w-full ${isVertical ? 'max-w-xl mx-auto' : 'max-w-[1360px]'} ${isLight ? 'bg-zinc-100 border-zinc-200 shadow-xl' : 'bg-brand-dark/85 backdrop-blur-3xl border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]'} border rounded-3xl p-6 md:p-8 lg:p-9 transition-all duration-300`}>
+          <div className="flex flex-col items-center text-center space-y-6 py-8">
+            <div className="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center">
+              <X className="text-red-500" size={32} />
+            </div>
+            <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
+              Não foi possível continuar
+            </h3>
+            <p className={`text-sm max-w-md ${isLight ? 'text-zinc-600' : 'text-zinc-400'}`}>
+              {disqualifyMessage}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setDisqualified(false)
+                setDisqualifyMessage('')
+                setTerreno('')
+                setCidade('')
+                setCurrentStep(1)
+              }}
+              className="px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:border-white/20 transition-all"
+            >
+              Recomeçar
+            </button>
+          </div>
+        </div>
+      ) : (
+      /* Main Form Container - Step by Step (1-6) */
       <div className={`w-full ${isVertical ? 'max-w-xl mx-auto' : 'max-w-[1360px]'} ${isLight ? 'bg-zinc-100 border-zinc-200 shadow-xl' : 'bg-brand-dark/85 backdrop-blur-3xl border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]'} border rounded-3xl p-6 md:p-8 lg:p-9 transition-all duration-300`}>
         <div className="flex flex-col w-full gap-4">
           {/* Progress Bar */}
@@ -551,6 +596,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           )}
         </div>
       </div>
+      )}
 
       {/* Modal / Popup - All fields at once */}
       <AnimatePresence>
