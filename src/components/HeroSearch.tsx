@@ -546,7 +546,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-brand-dark border border-white/10 rounded-3xl p-8 shadow-2xl"
+              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overflow-x-hidden bg-brand-dark border border-white/10 rounded-3xl p-8 shadow-2xl"
             >
               {/* Box Background Decor */}
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-gold/10 rounded-full blur-3xl"></div>
