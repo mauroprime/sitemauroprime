@@ -41,14 +41,20 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
   const [currentStep, setCurrentStep] = useState(1)
   const totalMainSteps = 4
 
-  // Form State
-  const [intent, setIntent] = useState<'Construir' | 'Investir' | null>(null)
-  const [hasLand, setHasLand] = useState<boolean | null>(null)
-  const [type, setType] = useState('')
+  // Form State - Main Steps
+  const [landStatus, setLandStatus] = useState('')
+  const [city, setCity] = useState('')
+  const [area, setArea] = useState('')
+  const [hasProject, setHasProject] = useState('')
+
+  // Investment slider
   const [investment, setInvestment] = useState(initialVal)
+
+  // Form State - Modal
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
+  const [financing, setFinancing] = useState('')
   const [timeframe, setTimeframe] = useState('')
 
   // Modal State
@@ -92,7 +98,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
       setIsOpen(true)
       firePixelEvent('InitiateCheckout', {
         content_name: projectSlug ? `Análise: ${projectSlug}` : 'Procura Geral',
-        content_category: type || 'Geral'
+        content_category: 'Lead'
       })
     }
   }
@@ -106,15 +112,13 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
 
   const canProceed = () => {
     switch (currentStep) {
-      case 1: return intent !== null
-      case 2: return hasLand !== null
-      case 3: return type !== ''
-      case 4: return true
+      case 1: return landStatus !== ''
+      case 2: return city.trim().length > 0
+      case 3: return area.trim().length > 0
+      case 4: return hasProject !== ''
       default: return false
     }
   }
-
-  const isFormValid = intent !== null && hasLand !== null && type !== ''
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -125,11 +129,15 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     formData.append('name', name)
     formData.append('email', email)
     formData.append('phone', whatsapp)
-    formData.append('intent', intent || '')
-    formData.append('has_land', hasLand ? 'true' : 'false')
-    formData.append('project_type', type)
+    formData.append('intent', 'Construir')
+    formData.append('has_land', landStatus === 'Já possuo o terreno' ? 'true' : 'false')
+    formData.append('project_type', 'Personalizado')
     formData.append('investment_range', `R$ ${investment}k`)
     formData.append('timeframe', timeframe)
+    formData.append('city', city)
+    formData.append('area', area)
+    formData.append('has_project', hasProject)
+    formData.append('financing', financing)
     if (projectId) {
       formData.append('related_project_id', projectId)
     }
@@ -158,13 +166,15 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
           params.append('name', name)
           params.append('email', email)
           params.append('phone', whatsapp)
-          params.append('intent', intent || '')
-          params.append('has_land', hasLand ? 'true' : 'false')
-          params.append('project_type', type)
+          params.append('intent', 'Construir')
+          params.append('has_land', landStatus === 'Já possuo o terreno' ? 'true' : 'false')
+          params.append('project_type', 'Personalizado')
           
           const labelUpper = projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)
           params.append('investment', `R$ ${investment}k a ${labelUpper}`)
           params.append('timeframe', timeframe)
+          params.append('city', city)
+          params.append('area', area)
 
           const redirectUrl = `/obrigado?${params.toString()}`
           router.push(redirectUrl)
@@ -179,22 +189,15 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
     }
   }
 
-  // Auto-advance for toggle buttons
-  const handleIntentSelect = (value: 'Construir' | 'Investir') => {
-    setIntent(value)
+  // Auto-advance for select/toggle buttons
+  const handleLandSelect = (value: string) => {
+    setLandStatus(value)
     setTimeout(() => goNext(), 300)
   }
 
-  const handleHasLandSelect = (value: boolean) => {
-    setHasLand(value)
+  const handleProjectSelect = (value: string) => {
+    setHasProject(value)
     setTimeout(() => goNext(), 300)
-  }
-
-  const handleTypeSelect = (value: string) => {
-    setType(value)
-    if (value) {
-      setTimeout(() => goNext(), 300)
-    }
   }
 
   // Progress dots
@@ -242,40 +245,27 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 Passo 1 de {totalMainSteps}
               </p>
               <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
-                O que você busca?
+                Você já possui o terreno ou está em processo de compra?
               </h3>
             </div>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => handleIntentSelect('Construir')}
-                className={`flex-1 py-6 rounded-xl text-xs font-black uppercase tracking-widest transition-all border-2 ${
-                  intent === 'Construir'
-                    ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
-                    : isLight
-                    ? 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-300'
-                    : 'bg-white/5 border-white/10 text-zinc-500 hover:border-white/20'
-                }`}
-              >
-                <HomeIcon className="w-6 h-6 mx-auto mb-2" />
-                Construir
-              </button>
-              <button
-                type="button"
-                onClick={() => handleIntentSelect('Investir')}
-                className={`flex-1 py-6 rounded-xl text-xs font-black uppercase tracking-widest transition-all border-2 ${
-                  intent === 'Investir'
-                    ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
-                    : isLight
-                    ? 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-300'
-                    : 'bg-white/5 border-white/10 text-zinc-500 hover:border-white/20'
-                }`}
-              >
-                <svg className="w-6 h-6 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-                Investir
-              </button>
+            <div className="space-y-2">
+              {['Já possuo o terreno', 'Estou em processo de compra', 'Ainda não tenho terreno'].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handleLandSelect(option)}
+                  className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
+                    landStatus === option
+                      ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
+                      : isLight
+                      ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                      : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
+                  }`}
+                >
+                  <span>{option}</span>
+                  {landStatus === option && <CheckCircle2 size={18} />}
+                </button>
+              ))}
             </div>
           </div>
         )
@@ -288,39 +278,34 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 Passo 2 de {totalMainSteps}
               </p>
               <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
-                Possui terreno?
+                Em qual cidade será a construção?
               </h3>
             </div>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => handleHasLandSelect(true)}
-                className={`flex-1 flex items-center justify-center gap-2 py-6 rounded-xl text-xs font-black transition-all border-2 ${
-                  hasLand === true
-                    ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
-                    : isLight
-                    ? 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-300'
-                    : 'bg-white/5 border-white/10 text-zinc-500 hover:border-white/20'
-                }`}
-              >
-                <CheckCircle2 size={18} className={hasLand === true ? 'opacity-100' : 'opacity-0'} />
-                SIM
-              </button>
-              <button
-                type="button"
-                onClick={() => handleHasLandSelect(false)}
-                className={`flex-1 flex items-center justify-center gap-2 py-6 rounded-xl text-xs font-black transition-all border-2 ${
-                  hasLand === false
-                    ? 'bg-zinc-800 border-zinc-800 text-white shadow-lg shadow-black/20'
-                    : isLight
-                    ? 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-300'
-                    : 'bg-white/5 border-white/10 text-zinc-500 hover:border-white/20'
-                }`}
-              >
-                <CheckCircle2 size={18} className={hasLand === false ? 'opacity-100' : 'opacity-0'} />
-                NÃO
-              </button>
-            </div>
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Ex: Curitiba, São Paulo..."
+              autoFocus
+              className={`w-full border-2 rounded-xl px-4 py-4 text-lg focus:outline-none transition-all ${
+                isLight
+                  ? 'bg-white border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-brand-gold'
+                  : 'bg-white/5 border-white/10 text-white placeholder-zinc-600 focus:border-brand-gold'
+              }`}
+            />
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!canProceed()}
+              className={`w-full py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 ${
+                canProceed()
+                  ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)]'
+                  : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'
+              }`}
+            >
+              <span>Próximo</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         )
 
@@ -332,28 +317,42 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 Passo 3 de {totalMainSteps}
               </p>
               <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
-                Estilo do projeto
+                Qual a metragem aproximada da construção?
               </h3>
             </div>
-            <div className="space-y-2">
-              {['Padrão', 'Médio Padrão', 'Alto Padrão'].map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => handleTypeSelect(option)}
-                  className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
-                    type === option
-                      ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
-                      : isLight
-                      ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
-                      : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
-                  }`}
-                >
-                  <span>{option}</span>
-                  {type === option && <CheckCircle2 size={18} />}
-                </button>
-              ))}
+            <div className="relative">
+              <input
+                type="text"
+                value={area}
+                onChange={(e) => {
+                  const onlyNums = e.target.value.replace(/\D/g, '')
+                  setArea(onlyNums)
+                }}
+                placeholder="Ex: 150"
+                autoFocus
+                className={`w-full border-2 rounded-xl px-4 py-4 text-lg focus:outline-none transition-all ${
+                  isLight
+                    ? 'bg-white border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:border-brand-gold'
+                    : 'bg-white/5 border-white/10 text-white placeholder-zinc-600 focus:border-brand-gold'
+                }`}
+              />
+              <span className={`absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold ${isLight ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                m²
+              </span>
             </div>
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!canProceed()}
+              className={`w-full py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 ${
+                canProceed()
+                  ? 'bg-brand-gold hover:bg-brand-goldlight text-black shadow-[0_10px_20px_rgba(212,175,55,0.2)]'
+                  : 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/10'
+              }`}
+            >
+              <span>Próximo</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         )
 
@@ -365,34 +364,28 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                 Passo 4 de {totalMainSteps}
               </p>
               <h3 className={`text-xl md:text-2xl font-serif ${isLight ? 'text-zinc-900' : 'text-white'}`}>
-                Investimento estimado
+                Já possui algum projeto ou croqui?
               </h3>
             </div>
-            <div className="space-y-3 px-1">
-              <div className={`flex justify-between text-xs ${isLight ? 'text-zinc-600' : 'text-zinc-500'} uppercase font-black tracking-widest`}>
-                <span>Seu orçamento</span>
-                <span className="text-brand-gold">
-                  R$ {investment}k - {projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={minVal}
-                max={maxVal}
-                step={stepVal}
-                value={investment}
-                onChange={(e) => setInvestment(parseInt(e.target.value))}
-                className={`w-full cursor-pointer transition-all ${isLight ? 'text-zinc-300' : 'text-white/10'}`}
-              />
+            <div className="space-y-2">
+              {['Já tenho projeto aprovado', 'Tenho um croqui/rascunho', 'Ainda estou em fase de ideias'].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handleProjectSelect(option)}
+                  className={`w-full flex items-center justify-between py-5 px-5 rounded-xl text-sm font-bold transition-all border-2 ${
+                    hasProject === option
+                      ? 'bg-brand-gold border-brand-gold text-black shadow-lg shadow-brand-gold/20'
+                      : isLight
+                      ? 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                      : 'bg-white/5 border-white/10 text-zinc-400 hover:border-white/20'
+                  }`}
+                >
+                  <span>{option}</span>
+                  {hasProject === option && <CheckCircle2 size={18} />}
+                </button>
+              ))}
             </div>
-            <button
-              type="button"
-              onClick={goNext}
-              className="w-full bg-brand-gold hover:bg-brand-goldlight text-black py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_10px_20px_rgba(212,175,55,0.2)]"
-            >
-              <Search className="w-4 h-4" />
-              <span>Analisar Agora</span>
-            </button>
           </div>
         )
 
@@ -443,7 +436,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
         </div>
       </div>
 
-      {/* Modal / Popup - All fields at once (original layout) */}
+      {/* Modal / Popup - All fields at once */}
       <AnimatePresence>
         {isOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-sm">
@@ -451,14 +444,14 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-brand-dark border border-white/10 rounded-3xl p-8 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-brand-dark border border-white/10 rounded-3xl p-8 shadow-2xl"
             >
               {/* Box Background Decor */}
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-gold/10 rounded-full blur-3xl"></div>
               
               <button 
                 onClick={() => setIsOpen(false)}
-                className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors"
+                className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors z-10"
                 disabled={isPending}
               >
                 <X size={24} />
@@ -470,7 +463,7 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                     <CheckCircle2 size={48} />
                   </div>
                   <h3 className="text-3xl font-serif text-white">Análise Solicitada!</h3>
-                  <p className="text-zinc-400">Obrigado pelo interesse! Redirecionando para a página de obrigado...</p>
+                  <p className="text-zinc-400">Obrigado pelo interesse! Redirecionando...</p>
                 </div>
               ) : (
                 <>
@@ -479,13 +472,78 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                     <p className="text-sm text-zinc-400">Complete seus dados para abrirmos sua análise consultiva personalizada.</p>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-5">
                     {error && (
                       <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-xs p-3 rounded-lg">
                         {error}
                       </div>
                     )}
 
+                    {/* Faixa de Investimento */}
+                    <div className="space-y-3">
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Faixa de Investimento</label>
+                      <div className="flex justify-between text-xs text-zinc-500 uppercase font-black tracking-widest px-1">
+                        <span>Seu orçamento</span>
+                        <span className="text-brand-gold">
+                          R$ {investment}k - {projectPrice ? `R$ ${investment + rangePlus}k` : (investment > 1500 ? '2M+' : `R$ ${investment + 500}k`)}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={minVal}
+                        max={maxVal}
+                        step={stepVal}
+                        value={investment}
+                        onChange={(e) => setInvestment(parseInt(e.target.value))}
+                        className="w-full cursor-pointer text-white/10"
+                      />
+                    </div>
+
+                    <div className="h-px bg-white/5"></div>
+
+                    {/* Financiamento */}
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Recursos próprios ou financiamento?</label>
+                      <select
+                        required
+                        value={financing}
+                        onChange={(e) => setFinancing(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white appearance-none focus:outline-none focus:border-brand-gold transition-all cursor-pointer"
+                        disabled={isPending}
+                      >
+                        <option value="" className="bg-brand-dark text-white">Selecione</option>
+                        <option value="Recursos próprios" className="bg-brand-dark text-white">Recursos próprios</option>
+                        <option value="Financiamento bancário" className="bg-brand-dark text-white">Financiamento bancário</option>
+                        <option value="Misto (entrada + financiamento)" className="bg-brand-dark text-white">Misto (entrada + financiamento)</option>
+                        <option value="Ainda não defini" className="bg-brand-dark text-white">Ainda não defini</option>
+                      </select>
+                    </div>
+
+                    {/* Prazo */}
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Pretende iniciar a obra em qual prazo?</label>
+                      <select
+                        required
+                        value={timeframe}
+                        onChange={(e) => setTimeframe(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white appearance-none focus:outline-none focus:border-brand-gold transition-all cursor-pointer"
+                        disabled={isPending}
+                      >
+                        <option value="" className="bg-brand-dark text-white">Selecione o prazo</option>
+                        <option value="Preciso com urgência" className="bg-brand-dark text-white">Preciso com urgência</option>
+                        <option value="Pretendo iniciar em 30 dias" className="bg-brand-dark text-white">Pretendo iniciar em 30 dias</option>
+                        <option value="Pretendo iniciar em 90 dias" className="bg-brand-dark text-white">Pretendo iniciar em 90 dias</option>
+                        <option value="Pretendo iniciar daqui 6 meses" className="bg-brand-dark text-white">Pretendo iniciar daqui 6 meses</option>
+                        <option value="Pretendo iniciar daqui 1 ano" className="bg-brand-dark text-white">Pretendo iniciar daqui 1 ano</option>
+                        <option value="Pretendo iniciar daqui 2 anos" className="bg-brand-dark text-white">Pretendo iniciar daqui 2 anos</option>
+                        <option value="Somente 2 anos +" className="bg-brand-dark text-white">Somente 2 anos +</option>
+                        <option value="Estou só avaliando as possibilidades" className="bg-brand-dark text-white">Estou só avaliando as possibilidades</option>
+                      </select>
+                    </div>
+
+                    <div className="h-px bg-white/5"></div>
+
+                    {/* Dados pessoais */}
                     <div className="space-y-2">
                       <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Nome e Sobrenome</label>
                       <input 
@@ -523,27 +581,6 @@ function HeroSearchContent({ variant = 'horizontal', theme = 'dark', projectSlug
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white placeholder-zinc-600 focus:outline-none focus:border-brand-gold transition-all"
                         disabled={isPending}
                       />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 ml-1">Quando você pretende iniciar?</label>
-                      <select 
-                        required
-                        value={timeframe}
-                        onChange={(e) => setTimeframe(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white appearance-none focus:outline-none focus:border-brand-gold transition-all cursor-pointer"
-                        disabled={isPending}
-                      >
-                        <option value="" className="bg-brand-dark text-white">Selecione o prazo</option>
-                        <option value="Preciso com urgência" className="bg-brand-dark text-white">Preciso com urgência</option>
-                        <option value="Pretendo iniciar em 30 dias" className="bg-brand-dark text-white">Pretendo iniciar em 30 dias</option>
-                        <option value="Pretendo iniciar em 90 dias" className="bg-brand-dark text-white">Pretendo iniciar em 90 dias</option>
-                        <option value="Pretendo iniciar daqui 6 meses" className="bg-brand-dark text-white">Pretendo iniciar daqui 6 meses</option>
-                        <option value="Pretendo iniciar daqui 1 ano" className="bg-brand-dark text-white">Pretendo iniciar daqui 1 ano</option>
-                        <option value="Pretendo iniciar daqui 2 anos" className="bg-brand-dark text-white">Pretendo iniciar daqui 2 anos</option>
-                        <option value="Somente 2 anos +" className="bg-brand-dark text-white">Somente 2 anos +</option>
-                        <option value="Estou só avaliando as possibilidades" className="bg-brand-dark text-white">Estou só avaliando as possibilidades</option>
-                      </select>
                     </div>
 
                     <button 
